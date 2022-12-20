@@ -2,7 +2,7 @@
 
 Arch Trainging
 
-## Requirement
+## Requirements
 
 ### Required APIs
 
