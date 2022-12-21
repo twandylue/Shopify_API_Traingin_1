@@ -17,10 +17,10 @@ Arch Trainging
 
 - [取得結帳網址_1(checkoutCreate)](https://shopify.dev/api/storefront/2022-10/mutations/checkoutCreate)
   - [document](https://shopify.dev/custom-storefronts/checkout/create#requirements)
-  - scope: `unauthenticated_write_checkouts`, `write_checkouts_payments`
+  - scope: `unauthenticated_write_checkouts`, `unauthenticated_read_checkouts` and `write_checkouts_payments`
 
 - [取得結帳網址_2(checkoutCustomerAssociateV2)](https://shopify.dev/api/storefront/2022-10/mutations/checkoutCustomerAssociateV2)
-  - scope: `unauthenticated_write_checkouts`, `write_checkouts_payments`
+  - scope: `unauthenticated_write_checkouts`, `unauthenticated_read_checkouts` and `write_checkouts_payments`
 
 - [加入購物車(cartLinesAdd)](https://shopify.dev/api/storefront/2022-10/mutations/cartLinesAdd)
   - [document](https://shopify.dev/custom-storefronts/cart/manage)
