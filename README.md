@@ -18,10 +18,10 @@ Arch Team Trainging
 - [列出商品清單_2(products)](https://shopify.dev/api/storefront/2022-04/queries/products)
   - scope: Product(`unauthenticated_read_product_listings`)
 
-- [建立購物車(before adding lines into cart)](https://shopify.dev/api/storefront/2022-10/mutations/cartCreate)
+- [建立購物車(cartCreate)](https://shopify.dev/api/storefront/2022-10/mutations/cartCreate)
   - scope: `unauthenticated_read_product_listings`, `unauthenticated_read_customers` and `unauthenticated_write_checkouts`
 
-- [查詢購物車(before adding lines into cart)](https://shopify.dev/api/storefront/2022-10/queries/cart)
+- [查詢購物車(cart)](https://shopify.dev/api/storefront/2022-10/queries/cart)
   - scope: `unauthenticated_read_product_listings`, `unauthenticated_read_customers` and `unauthenticated_write_checkouts`
 
 - [加入購物車(cartLinesAdd)](https://shopify.dev/api/storefront/2022-10/mutations/cartLinesAdd)
