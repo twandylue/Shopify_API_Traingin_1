@@ -44,7 +44,7 @@
 
 - Variables
 
-  ```graphql
+  ```json
   {
     "input": {
       "buyerIdentity": {
@@ -62,7 +62,7 @@
 
 - Response
 
-  ```graphql
+  ```json
   {
       "data": {
           "cartCreate": {
@@ -99,7 +99,7 @@ Before: [Getting product id](ListAllProducts.md)
 
 - Variables
 
-  ```graphql
+  ```json
   {
     "input": {
       "buyerIdentity": {
@@ -117,7 +117,7 @@ Before: [Getting product id](ListAllProducts.md)
 
 - Response
 
-  ```graphql
+  ```json
   {
       "data": {
           "cartCreate": {
@@ -189,7 +189,7 @@ Before: [Getting product id](ListAllProducts.md)
 
 - Response
 
-  ```graphql
+  ```json
   {
       "data": {
           "cart": {

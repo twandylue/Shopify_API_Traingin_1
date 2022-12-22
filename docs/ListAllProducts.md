@@ -40,7 +40,7 @@
 
 - Response
 
-  ```graphql
+  ```json
   {
       "data": {
           "products": {

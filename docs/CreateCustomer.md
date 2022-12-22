@@ -37,7 +37,7 @@
 
 - Variables
 
-  ```graphql
+  ```json
   {
     "input": {
       "firstName": "Andy",
@@ -52,7 +52,7 @@
 
 - Response
 
-  ```graphql
+  ```json
   {
     "data": {
       "customer": {
@@ -69,7 +69,7 @@
 
 ### Second step (customerAccessTokenCreate)
 
-- Request(Mutation)
+- Request
 
   ```graphql
   mutation customerAccessTokenCreate {
@@ -86,7 +86,7 @@
 
 - Response
 
-  ```graphql
+  ```json
   {
     "data": {
       "customerAccessTokenCreate": {
