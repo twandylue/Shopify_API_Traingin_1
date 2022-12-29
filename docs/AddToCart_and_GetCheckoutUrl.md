@@ -83,11 +83,24 @@ Before: [Getting product id](ListAllProducts.md)
 - Request
 
   ```graphql
-  mutation cartCreate {
-    cartCreate {
+  mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+    cartLinesAdd(cartId: $cartId, lines: $lines) {
       cart {
-          id
-          checkoutUrl
+        # Cart fields
+        id
+        checkoutUrl
+        buyerIdentity{
+            email
+            phone
+        }
+        lines(first:100) {
+            edges{
+                node{
+                    id
+                    quantity
+                }
+            }
+        }
       }
       userErrors {
         field
@@ -101,16 +114,10 @@ Before: [Getting product id](ListAllProducts.md)
 
   ```json
   {
-    "input": {
-      "buyerIdentity": {
-        "customerAccessToken": "********************************"
-      },
-      "lines": [
-        {
-          "merchandiseId": "gid://shopify/ProductVariant/160399327256",
-          "quantity": 1
-        }
-      ]
+    "cartId": "gid://shopify/Cart/51248df9eb2305a7394f020563966ec7",
+    "lines": {
+      "merchandiseId": "gid://shopify/ProductVariant/160399327256",
+      "quantity": 1
     }
   }
   ```
@@ -120,10 +127,24 @@ Before: [Getting product id](ListAllProducts.md)
   ```json
   {
       "data": {
-          "cartCreate": {
+          "cartLinesAdd": {
               "cart": {
                   "id": "gid://shopify/Cart/51248df9eb2305a7394f020563966ec7",
-                  "checkoutUrl": "https://eat-your-own-dog-food.myshopify.com/cart/c/51248df9eb2305a7394f020563966ec7"
+                  "checkoutUrl": "https://eat-your-own-dog-food.myshopify.com/cart/c/51248df9eb2305a7394f020563966ec7",
+                  "buyerIdentity": {
+                      "email": null,
+                      "phone": null
+                  },
+                  "lines": {
+                      "edges": [
+                          {
+                              "node": {
+                                  "id": "gid://shopify/CartLine/383ba3b7-01ee-4148-bc4e-a5b923f2e091?cart=51248df9eb2305a7394f020563966ec7",
+                                  "quantity": 5
+                              }
+                          }
+                      ]
+                  }
               },
               "userErrors": []
           }

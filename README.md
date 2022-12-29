@@ -1,4 +1,4 @@
-# Shopify_API_Traingin_1
+# Shopify_API_Trainging_1
 
 Arch Team Trainging
 
