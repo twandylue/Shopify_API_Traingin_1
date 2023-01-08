@@ -12,7 +12,7 @@ pub enum State {
     Logined,
 }
 // NOTE: mem::varient_count is not stable
-const STATE_COUNT: usize = 2;
+const STATE_COUNT: usize = 3;
 const STATE_ARR: [State; 2] = [State::Init, State::Logined];
 
 impl std::fmt::Display for State {
@@ -27,14 +27,16 @@ impl std::fmt::Display for State {
 
 #[derive(Debug, Clone, Copy)]
 enum Command {
+    Invalid,
     Login,
 }
-const COMMAND_COUNT: usize = 1;
+const COMMAND_COUNT: usize = 2;
 const COMMAND_ARR: [Command; 1] = [Command::Login];
 
 impl std::fmt::Display for Command {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            Command::Invalid => write!(f, "Invalid"),
             Command::Login => write!(f, "Login"),
         }
     }
@@ -50,11 +52,16 @@ fn state_to_index(state: State) -> usize {
 
 fn command_to_index(command: Command) -> usize {
     match command {
+        Command::Invalid => 0,
         Command::Login => 1,
     }
 }
 
-const FSM: [[State; COMMAND_COUNT]; STATE_COUNT] = [[State::Logined], [State::Unreachable]];
+const FSM: [[State; COMMAND_COUNT]; STATE_COUNT] = [
+    [State::Unreachable, State::Unreachable],
+    [State::Unreachable, State::Logined],
+    [State::Unreachable, State::Unreachable],
+];
 
 impl Account {
     pub fn new(email: String, password: String) -> Self {
@@ -68,7 +75,7 @@ impl Account {
     fn change_state(&mut self, command: Command) {
         let state = self::state_to_index(self.state);
         let command = self::command_to_index(command);
-        let next_state = FSM[state - 1][command - 1];
+        let next_state = FSM[state][command];
 
         println!("next_state: {}", next_state);
         if next_state == State::Unreachable {
