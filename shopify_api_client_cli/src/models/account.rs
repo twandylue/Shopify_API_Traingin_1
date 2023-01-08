@@ -2,19 +2,23 @@
 pub struct Account {
     email: String,
     password: String,
-    state: self::State,
+    state: State,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum State {
+    Unreachable,
     Init,
     Logined,
 }
+// NOTE: mem::varient_count is not stable
 const STATE_COUNT: usize = 2;
+const STATE_ARR: [State; 2] = [State::Init, State::Logined];
 
 impl std::fmt::Display for State {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            State::Unreachable => write!(f, "Invalid"),
             State::Init => write!(f, "Init"),
             State::Logined => write!(f, "Logined"),
         }
@@ -26,6 +30,7 @@ enum Command {
     Login,
 }
 const COMMAND_COUNT: usize = 1;
+const COMMAND_ARR: [Command; 1] = [Command::Login];
 
 impl std::fmt::Display for Command {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -37,23 +42,10 @@ impl std::fmt::Display for Command {
 
 fn state_to_index(state: State) -> usize {
     match state {
+        State::Unreachable => 0,
         State::Init => 1,
         State::Logined => 2,
     }
-}
-
-fn index_to_state(index: usize) -> State {
-    let mut ret: State = State::Init;
-
-    if index == 1 {
-        ret = State::Init;
-    } else if index == 2 {
-        ret = State::Logined;
-    } else {
-        unreachable!("index: {}, undefined state machine(State).", index);
-    }
-
-    return ret;
 }
 
 fn command_to_index(command: Command) -> usize {
@@ -62,20 +54,7 @@ fn command_to_index(command: Command) -> usize {
     }
 }
 
-fn index_to_command(index: usize) -> Command {
-    let mut ret: Command = Command::Login;
-
-    if index == 1 {
-        ret = Command::Login;
-    } else {
-        unreachable!("index: {}, undefined state machine(Command).", index);
-    }
-
-    return ret;
-}
-
-// TODO: index of state
-const FSM: [[usize; COMMAND_COUNT]; STATE_COUNT] = [[2], [0]];
+const FSM: [[State; COMMAND_COUNT]; STATE_COUNT] = [[State::Logined], [State::Unreachable]];
 
 impl Account {
     pub fn new(email: String, password: String) -> Self {
@@ -92,22 +71,21 @@ impl Account {
         let next_state = FSM[state - 1][command - 1];
 
         println!("next_state: {}", next_state);
-        if next_state == 0 {
+        if next_state == State::Unreachable {
             unreachable!(
                 "Invalid chaning state. current state: {}, command: {}",
                 self.state, command
             );
         } else {
-            self.state = index_to_state(next_state);
+            self.state = next_state
         }
     }
 
     pub fn login(&mut self) {
-        // todo!();
         self.change_state(Command::Login);
     }
 
-    // getter
+    // getters
     pub fn email(&self) -> String {
         self.email.clone()
     }
