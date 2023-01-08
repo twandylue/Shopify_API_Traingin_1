@@ -71,15 +71,16 @@ impl Account {
     }
 
     fn change_state(&mut self, command: Command) {
-        let state = self::state_to_index(self.state);
-        let command = self::command_to_index(command);
-        let next_state = FSM[state][command];
+        let i_state = self::state_to_index(self.state);
+        let i_command = self::command_to_index(command);
+        let next_state = FSM[i_state][i_command];
 
         println!("next_state: {}", next_state);
         if next_state == State::Unreachable {
             unreachable!(
                 "Invalid Account state changing. current state: {}, command: {}",
-                self.state, command
+                self.state,
+                command.to_string()
             );
         } else {
             self.state = next_state
