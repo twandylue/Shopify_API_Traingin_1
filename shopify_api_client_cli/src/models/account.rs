@@ -17,10 +17,18 @@ const STATE_COUNT: usize = 3;
 impl std::fmt::Display for State {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            State::Unreachable => write!(f, "Invalid"),
+            State::Unreachable => write!(f, "Unreachable"),
             State::Init => write!(f, "Init"),
             State::Logined => write!(f, "Logined"),
         }
+    }
+}
+
+fn state_to_index(state: State) -> usize {
+    match state {
+        State::Unreachable => 0,
+        State::Init => 1,
+        State::Logined => 2,
     }
 }
 
@@ -37,14 +45,6 @@ impl std::fmt::Display for Command {
             Command::Invalid => write!(f, "Invalid"),
             Command::Login => write!(f, "Login"),
         }
-    }
-}
-
-fn state_to_index(state: State) -> usize {
-    match state {
-        State::Unreachable => 0,
-        State::Init => 1,
-        State::Logined => 2,
     }
 }
 
