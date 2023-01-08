@@ -78,7 +78,7 @@ impl Account {
         println!("next_state: {}", next_state);
         if next_state == State::Unreachable {
             unreachable!(
-                "Invalid chaning state. current state: {}, command: {}",
+                "Invalid Account state changing. current state: {}, command: {}",
                 self.state, command
             );
         } else {
