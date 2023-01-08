@@ -13,7 +13,6 @@ pub enum State {
 }
 // NOTE: mem::varient_count is not stable
 const STATE_COUNT: usize = 3;
-const STATE_ARR: [State; 2] = [State::Init, State::Logined];
 
 impl std::fmt::Display for State {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -31,7 +30,6 @@ enum Command {
     Login,
 }
 const COMMAND_COUNT: usize = 2;
-const COMMAND_ARR: [Command; 1] = [Command::Login];
 
 impl std::fmt::Display for Command {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
