@@ -96,10 +96,9 @@ fn test_account_change_state_to_CreatingConsumer_ok() {
 }
 
 #[test]
-fn test_account_change_state_to_CheckingConsumerInfo_ok() {
+fn test_account_change_state_to_ReadyToPay_ok() {
     // arrange
-    // TODO: State::CheckingConsumerInfo is unnecessary.
-    let expected = State::CheckingConsumerInfo;
+    let expected = State::ReadyToPay;
     let email = "andylu@email.com".to_string();
     let password = "123456789".to_string();
     let mut account = Account::new(email, password);

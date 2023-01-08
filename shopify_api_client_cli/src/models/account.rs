@@ -19,7 +19,7 @@ pub enum State {
     SelectingProducts,
     CheckingSelectedProducts,
     CreatingConsumer,
-    CheckingConsumerInfo,
+    ReadyToPay,
     Paying,
     Paid,
 }
@@ -35,7 +35,7 @@ impl std::fmt::Display for State {
             State::SelectingProducts => write!(f, "SelectingProducts"),
             State::CheckingSelectedProducts => write!(f, "CheckingSelectedProducts"),
             State::CreatingConsumer => write!(f, "CreatingConsumer"),
-            State::CheckingConsumerInfo => write!(f, "CheckingConsumer"),
+            State::ReadyToPay => write!(f, "ReadyToPay"),
             State::Paying => write!(f, "Paying"),
             State::Paid => write!(f, "Paid"),
         }
@@ -50,7 +50,7 @@ fn state_to_index(state: State) -> usize {
         State::SelectingProducts => 3,
         State::CheckingSelectedProducts => 4,
         State::CreatingConsumer => 5,
-        State::CheckingConsumerInfo => 6,
+        State::ReadyToPay => 6,
         State::Paying => 7,
         State::Paid => 8,
     }
@@ -154,7 +154,7 @@ const FSM: [[State; COMMAND_COUNT]; STATE_COUNT] = [
         State::Unreachable,
         State::Unreachable,
         State::Unreachable,
-        State::CheckingConsumerInfo,
+        State::ReadyToPay,
         State::Unreachable,
         State::Unreachable,
     ],
@@ -245,7 +245,7 @@ impl Account {
         // TODO: select by name
         self.change_state(Command::CheckConsumerInfo);
         let customer = self.customers.first();
-        // TODO:
+        // TODO: url should from graphql
         let url = String::new();
 
         return url;
