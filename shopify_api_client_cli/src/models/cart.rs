@@ -4,17 +4,17 @@ use super::product::Product;
 
 #[derive(Debug)]
 pub struct Cart {
-    current_products: HashMap<i32, i32>,
+    current_products: HashMap<u32, i32>,
 }
 
 impl Cart {
     pub fn new() -> Self {
         Cart {
-            current_products: HashMap::<i32, i32>::new(),
+            current_products: HashMap::<u32, i32>::new(),
         }
     }
 
-    pub fn show_all(&self) -> HashMap<i32, i32> {
+    pub fn show_all(&self) -> HashMap<u32, i32> {
         self.current_products.clone()
     }
 
