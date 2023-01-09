@@ -1,6 +1,8 @@
 mod graphqls;
 mod models;
+mod render_templates;
 
+use crate::render_templates::render_products_templates;
 use clap::Parser;
 use shopify_api_client_cli::models::{
     account::{Account, State},
@@ -47,19 +49,15 @@ fn main() {
         .read_line(&mut decision)
         .expect("Did not enter a correct string");
 
-    // println!("decision: {}", decision.trim_end());
-    // println!("result: {}", decision.trim_end().eq("wahtsnew"));
-
     if !decision.trim_end().eq("whatsnew") {
         println!("Ok! I can do nothing. ByeBye!");
         return;
     }
 
     let list = Product_List::new();
-    // let cart: Cart = account.select_products();
-    account.select_products();
+    let mut cart: Cart = account.select_products();
     while account.state() == State::SelectingProducts {
-        print_products_template(&list);
+        render_products_templates::render_products_info(&list);
         let mut input = String::new();
         stdin()
             .read_line(&mut input)
@@ -74,26 +72,15 @@ fn main() {
             .into_iter()
             .find(|x| x.id() == input.trim_end().parse::<u32>().unwrap());
 
-        println!("p: {:?}", ele.unwrap());
-
-        // cart.add();
+        cart.add(ele.unwrap());
     }
 
     println!("end...");
 }
 
-pub fn print_products_template(product_list: &Product_List) {
-    println!("Unifi 團購清單");
-    product_list.items().iter().for_each(|product| {
-        println!(
-            "{}). name: {}, price: {}, description: {}",
-            product.id(),
-            product.name(),
-            product.price(),
-            product.description()
-        );
-    });
-    println!("----------------------------------");
-    println!("Please choose what's you want(id).");
-    println!("input 'x' to checkout");
-}
+// pub fn render_cart_info(cart: &Cart) {
+//     println!("Current Cart: ");
+//     cart.show_all().iter().for_each(|c| {
+//         c.0;
+//     });
+// }
