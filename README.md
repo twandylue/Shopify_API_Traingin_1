@@ -1,5 +1,7 @@
 # Shopify_API_Trainging_1
 
+<!-- [![Github actions Status](https://github.com/graphql-rust/graphql-client/workflows/CI/badge.svg?branch=main&event=push)](https://github.com/graphql-rust/graphql-client/actions) -->
+
 Arch Team Trainging
 
 ## Requirements
@@ -88,5 +90,5 @@ TODO:
 ## References
 
 - [GraphQL Client In Rust](https://github.com/graphql-rust/graphql-client)
-- [Http Client In Rust](https://github.com/hyperium/hyper)
+- [Http Client In Rust](https://github.com/seanmonstar/reqwest)
 - [Cli In Rust](https://rust-cli.github.io/book/index.html)
