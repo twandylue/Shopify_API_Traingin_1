@@ -11,7 +11,8 @@ struct Cli {
     password: String,
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     // let args = Cli::parse();
     println!("Hi! Please Login First");
     let _ = stdout().flush();
@@ -32,4 +33,27 @@ fn main() {
 
     println!("#####################################################");
     println!("Start Conversation...");
+    println!("What do you want?");
+    println!("- whatsnew");
+    println!("- nothing");
+
+    let mut choose = String::new();
+    let blocking_task = tokio::task::spawn_blocking(|| {
+        // This is running on a blocking thread.
+        // Blocking here is ok.
+    });
+
+    // We can wait for the blocking task like this:
+    // If the blocking task panics, the unwrap below will propagate the
+    // panic.
+    blocking_task.await.unwrap();
+    stdin()
+        .read_line(&mut choose)
+        .expect("Did not enter a correct string");
+
+    if choose == "nothing".to_string() {
+        println!("test");
+        return;
+    }
+    println!("Unifi 團購清單");
 }
