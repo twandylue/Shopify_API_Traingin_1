@@ -104,6 +104,7 @@ impl Customer {
         }
     }
 
+    // TODO: Maybe we don't need to set checkout url to customer
     pub fn set_checkout_url(&mut self, url: String) {
         self.checkout_url = Some(url);
         self.change_state(Command::SetCheckoutUrl);
