@@ -1,3 +1,4 @@
+mod cli;
 mod graphqls;
 mod models;
 mod render_templates;
