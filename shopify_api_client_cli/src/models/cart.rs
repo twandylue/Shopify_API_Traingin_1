@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use super::product::Product;
+use super::{customer::Customer, product::Product};
 
 #[derive(Debug, Clone)]
 pub struct Cart {
@@ -74,7 +74,6 @@ const FSM: [[State; COMMAND_COUNT]; STATE_COUNT] = [
 
 impl Cart {
     pub fn new() -> Self {
-        // TODO: API(cartCreate)
         Cart {
             id: String::new(),
             checkout_url: String::new(),
@@ -118,9 +117,12 @@ impl Cart {
             .and_modify(|counter| *counter -= 1);
     }
 
-    pub fn checkout(&mut self) -> String {
+    pub fn checkout(&mut self, mut customer: Customer) -> String {
+        let token = customer.get_access_token();
+        // TODO: API(cartCreate with token)
+        // self.id = "xxxxxxxx".to_string();
+        // self.checkout_url = "ooooooooo".to_string();
         self.change_state(Command::Checkout);
-        // TODO: API(checkoutCreate)
 
         return self.checkout_url.clone();
     }
@@ -130,7 +132,11 @@ impl Cart {
         self.state
     }
 
-    pub fn checkout_url(&self) -> String {
-        self.checkout_url.clone()
+    pub fn checkout_url(&self) -> Option<String> {
+        if self.state == State::Checkouted {
+            Some(self.checkout_url.clone())
+        } else {
+            None
+        }
     }
 }

@@ -138,10 +138,10 @@ impl Customer {
 
     pub fn get_access_token(&mut self) -> String {
         // TODO: API(customerAccessTokenCreate)
-        let a = String::new();
+        let token = String::new();
         self.change_state(Command::GetAccessToken);
 
-        return a;
+        return token;
     }
 
     // pub fn checkout_cart(&mut self, cart: Cart) {
