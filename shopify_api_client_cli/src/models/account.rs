@@ -239,14 +239,11 @@ impl Account {
     }
 
     // NOTE: return checkout url
-    pub fn check_consumer(&mut self, customer_name: String) -> String {
+    pub fn check_consumer(&mut self, customer_name: String) -> Customer {
         // TODO: select by name
         self.change_state(Command::CheckConsumerInfo);
-        let customer = self.customers.first();
-        // TODO: url should from graphql
-        let url = String::new();
 
-        return url;
+        return self.customers.first().unwrap().clone();
     }
 
     // NOTE: clicking checkout url

@@ -3,6 +3,16 @@ use shopify_api_client_cli::models::{
     customer::{Customer, Payment},
 };
 
+fn prepare_for_customer() -> Customer {
+    let first_name = "andy".to_string();
+    let last_name = "lu".to_string();
+    let email = "andy@email.com".to_string();
+    let phone = "123456580".to_string();
+    let address = "my address".to_string();
+    let payment = Payment::CreditCard;
+    return Customer::new(first_name, last_name, email, phone, address, payment);
+}
+
 #[test]
 fn test_account_change_state_to_Logined_ok() {
     // arrange
@@ -73,25 +83,19 @@ fn test_account_change_state_to_CreatingConsumer_ok() {
     let email = "andylu@email.com".to_string();
     let password = "123456789".to_string();
     let mut account = Account::new(email, password);
-    let name = "andylu".to_string();
-    let address = "my address".to_string();
-    let payment = Payment::CreditCard;
-    let customer = Customer::new(name.clone(), address.clone(), payment);
+    let customer = prepare_for_customer();
 
     // act
     account.login();
     account.select_products();
     account.check_selected_products();
     account.check_cart();
-    account.add_customer(customer);
+    account.add_customer(customer.clone());
 
     // assert
     assert_eq!(expected, account.state());
     assert_eq!(1, account.customers().len());
-    assert_eq!(
-        Customer::new(name, address, payment),
-        *account.customers().first().unwrap()
-    );
+    assert_eq!(customer, *account.customers().first().unwrap());
 }
 
 #[test]
@@ -104,7 +108,7 @@ fn test_account_change_state_to_ReadyToPay_ok() {
     let name = "andylu".to_string();
     let address = "my address".to_string();
     let payment = Payment::CreditCard;
-    let customer = Customer::new(name.clone(), address.clone(), payment);
+    let customer = prepare_for_customer();
 
     // act
     account.login();
@@ -129,7 +133,7 @@ fn test_account_change_state_to_Paying_ok() {
     let name = "andylu".to_string();
     let address = "my address".to_string();
     let payment = Payment::CreditCard;
-    let customer = Customer::new(name.clone(), address.clone(), payment);
+    let customer = prepare_for_customer();
 
     // act
     account.login();
@@ -155,7 +159,7 @@ fn test_account_change_state_to_Paid_ok() {
     let name = "andylu".to_string();
     let address = "my address".to_string();
     let payment = Payment::CreditCard;
-    let customer = Customer::new(name.clone(), address.clone(), payment);
+    let customer = prepare_for_customer();
 
     // act
     account.login();
