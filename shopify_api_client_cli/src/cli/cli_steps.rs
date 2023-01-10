@@ -105,11 +105,11 @@ pub fn forth_step_checking_cart(cart: Cart, account: &mut Account) -> Cart {
     return final_cart;
 }
 
-pub fn fifth_step_creating_consumers(account: &mut Account) {
-    println!("Creating Consumer...");
+pub fn fifth_step_creating_customers(account: &mut Account) {
+    println!("Creating Customers...");
 
-    while account.state() == State::CreatingConsumer {
-        println!("Input the following information for new consumer: ");
+    while account.state() == State::CreatingCustomer {
+        println!("Input the following information for new customer: ");
         println!("- First Name: ");
         let mut first_name = String::new();
         stdin()

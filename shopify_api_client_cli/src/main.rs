@@ -5,7 +5,7 @@ mod render_templates;
 
 use crate::{
     cli::cli_steps::first_step_login,
-    cli::cli_steps::{fifth_step_creating_consumers, second_step_what_do_you_want_to_do},
+    cli::cli_steps::{fifth_step_creating_customers, second_step_what_do_you_want_to_do},
     cli::cli_steps::{forth_step_checking_cart, third_step_selecting_products},
 };
 use clap::Parser;
@@ -36,7 +36,7 @@ fn main() {
 
     let final_cart = forth_step_checking_cart(cart, &mut account);
 
-    fifth_step_creating_consumers(&mut account);
+    fifth_step_creating_customers(&mut account);
 
     println!("end...");
 }

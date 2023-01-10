@@ -79,7 +79,7 @@ fn test_account_change_state_to_CheckingSelectedProducts_ok() {
 #[test]
 fn test_account_change_state_to_CreatingConsumer_ok() {
     // arrange
-    let expected = State::CreatingConsumer;
+    let expected = State::CreatingCustomer;
     let email = "andylu@email.com".to_string();
     let password = "123456789".to_string();
     let mut account = Account::new(email, password);
