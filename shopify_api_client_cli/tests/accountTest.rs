@@ -76,12 +76,13 @@ fn test_account_change_state_to_CreatingConsumer_ok() {
     let name = "andylu".to_string();
     let address = "my address".to_string();
     let payment = Payment::CreditCard;
+    let customer = Customer::new(name.clone(), address.clone(), payment);
 
     // act
     account.login();
     account.select_products();
     account.check_selected_products();
-    account.create_consumer(name.clone(), address.clone(), payment);
+    account.add_customer(customer);
 
     // assert
     assert_eq!(expected, account.state());
@@ -102,12 +103,13 @@ fn test_account_change_state_to_ReadyToPay_ok() {
     let name = "andylu".to_string();
     let address = "my address".to_string();
     let payment = Payment::CreditCard;
+    let customer = Customer::new(name.clone(), address.clone(), payment);
 
     // act
     account.login();
     account.select_products();
     account.check_selected_products();
-    account.create_consumer(name.clone(), address, payment);
+    account.add_customer(customer);
     account.check_consumer(name.clone());
 
     // assert
@@ -125,12 +127,13 @@ fn test_account_change_state_to_Paying_ok() {
     let name = "andylu".to_string();
     let address = "my address".to_string();
     let payment = Payment::CreditCard;
+    let customer = Customer::new(name.clone(), address.clone(), payment);
 
     // act
     account.login();
     account.select_products();
     account.check_selected_products();
-    account.create_consumer(name.clone(), address, payment);
+    account.add_customer(customer);
     account.check_consumer(name.clone());
     account.pay();
 
@@ -149,12 +152,13 @@ fn test_account_change_state_to_Paid_ok() {
     let name = "andylu".to_string();
     let address = "my address".to_string();
     let payment = Payment::CreditCard;
+    let customer = Customer::new(name.clone(), address.clone(), payment);
 
     // act
     account.login();
     account.select_products();
     account.check_selected_products();
-    account.create_consumer(name.clone(), address, payment);
+    account.add_customer(customer);
     account.check_consumer(name.clone());
     account.pay();
     account.finish();

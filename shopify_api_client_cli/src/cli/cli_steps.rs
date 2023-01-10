@@ -1,7 +1,7 @@
 use shopify_api_client_cli::models::{
     account::{Account, State},
     cart::Cart,
-    customer::Payment,
+    customer::{Customer, Payment},
     product_list::Product_List,
 };
 use std::{io::stdin, str::FromStr};
@@ -127,7 +127,8 @@ pub fn fifth_step_creating_consumers(account: &mut Account) {
             .read_line(&mut payment)
             .expect("Did not enter a correct string");
 
-        account.create_consumer(name.clone(), address, Payment::from_str(&payment).unwrap());
+        let customer = Customer::new(name.clone(), address, Payment::from_str(&payment).unwrap());
+        account.add_customer(customer);
 
         // TODO: multiple customers
         // println!();

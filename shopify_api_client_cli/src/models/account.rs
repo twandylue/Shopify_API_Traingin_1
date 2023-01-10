@@ -229,12 +229,12 @@ impl Account {
         self.change_state(Command::CheckSelectedProducts);
     }
 
-    pub fn create_consumer(&mut self, name: String, address: String, payment: Payment) {
+    pub fn add_customer(&mut self, customer: Customer) {
         self.change_state(Command::StartToCreateConsumer);
 
-        // TODO: select by name(name should be unique)
+        // TODO: multiple customers, select by name(name should be unique)
         // let c = self.customers.iter().filter(move |e| e.name() == name);
-        self.customers.push(Customer::new(name, address, payment));
+        self.customers.push(customer);
     }
 
     // NOTE: return checkout url
