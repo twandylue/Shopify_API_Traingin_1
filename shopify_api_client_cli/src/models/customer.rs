@@ -116,7 +116,6 @@ impl Customer {
         let i_command = self::command_to_index(command);
         let next_state = FSM[i_state][i_command];
 
-        println!("next_state: {}", next_state);
         if next_state == State::Unreachable {
             unreachable!(
                 "Invalid Customer state changing. current state: {}, command: {}",
