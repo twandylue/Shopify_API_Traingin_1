@@ -158,7 +158,7 @@ fn test_customer_get_state_ok() {
     let expected = State::Init;
     let name = "andylu".to_string();
     let address = "address".to_string();
-    let payment = Payment::PickUPAtShop;
+    let payment = Payment::PickUpAtShop;
     let customer = Customer::new(name, address, payment);
 
     // act

@@ -1,3 +1,5 @@
+use std::{fmt::Display, str::FromStr};
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Customer {
     name: String,
@@ -10,7 +12,29 @@ pub struct Customer {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Payment {
     CreditCard,
-    PickUPAtShop,
+    PickUpAtShop,
+}
+
+impl Display for Payment {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Payment::CreditCard => write!(f, "CreditCart"),
+            Payment::PickUpAtShop => write!(f, "PickUpAtShop"),
+        }
+    }
+}
+
+impl FromStr for Payment {
+    type Err = ();
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "creditcard" => Ok(Payment::CreditCard),
+            "CreditCard" => Ok(Payment::CreditCard),
+            "PickUpAtShop" => Ok(Payment::PickUpAtShop),
+            "pickupatshop" => Ok(Payment::PickUpAtShop),
+            _ => Err(()),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
