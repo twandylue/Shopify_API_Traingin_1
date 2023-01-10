@@ -229,9 +229,11 @@ impl Account {
         self.change_state(Command::CheckSelectedProducts);
     }
 
-    pub fn add_customer(&mut self, customer: Customer) {
+    pub fn check_cart(&mut self) {
         self.change_state(Command::StartToCreateConsumer);
+    }
 
+    pub fn add_customer(&mut self, customer: Customer) {
         // TODO: multiple customers, select by name(name should be unique)
         // let c = self.customers.iter().filter(move |e| e.name() == name);
         self.customers.push(customer);

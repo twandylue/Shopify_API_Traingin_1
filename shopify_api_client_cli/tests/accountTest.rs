@@ -82,6 +82,7 @@ fn test_account_change_state_to_CreatingConsumer_ok() {
     account.login();
     account.select_products();
     account.check_selected_products();
+    account.check_cart();
     account.add_customer(customer);
 
     // assert
@@ -109,6 +110,7 @@ fn test_account_change_state_to_ReadyToPay_ok() {
     account.login();
     account.select_products();
     account.check_selected_products();
+    account.check_cart();
     account.add_customer(customer);
     account.check_consumer(name.clone());
 
@@ -133,6 +135,7 @@ fn test_account_change_state_to_Paying_ok() {
     account.login();
     account.select_products();
     account.check_selected_products();
+    account.check_cart();
     account.add_customer(customer);
     account.check_consumer(name.clone());
     account.pay();
@@ -158,6 +161,7 @@ fn test_account_change_state_to_Paid_ok() {
     account.login();
     account.select_products();
     account.check_selected_products();
+    account.check_cart();
     account.add_customer(customer);
     account.check_consumer(name.clone());
     account.pay();

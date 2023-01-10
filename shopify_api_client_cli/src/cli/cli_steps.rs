@@ -73,7 +73,7 @@ pub fn third_step_selecting_products(account: &mut Account) -> Cart {
     return cart;
 }
 
-pub fn forth_step_checking_selected_products(cart: Cart, account: &mut Account) -> Cart {
+pub fn forth_step_checking_cart(cart: Cart, account: &mut Account) -> Cart {
     let mut final_cart = cart.clone();
     while account.state() == State::CheckingSelectedProducts {
         println!("Checking your personal cart...");
@@ -85,6 +85,7 @@ pub fn forth_step_checking_selected_products(cart: Cart, account: &mut Account) 
             .read_line(&mut input)
             .expect("Did not enter a correct string");
         if input.trim_end().eq("x") {
+            account.check_cart();
             break;
         }
 
@@ -121,26 +122,30 @@ pub fn fifth_step_creating_consumers(account: &mut Account) {
             .read_line(&mut address)
             .expect("Did not enter a correct string");
 
-        println!("- Payment: ");
+        println!("- Payment(CreditCard/PickUpAtShop): ");
         let mut payment = String::new();
         stdin()
             .read_line(&mut payment)
             .expect("Did not enter a correct string");
 
-        let customer = Customer::new(name.clone(), address, Payment::from_str(&payment).unwrap());
-        account.add_customer(customer);
+        let customer = Customer::new(
+            name.trim_end().to_string(),
+            address.trim_end().to_string(),
+            Payment::from_str(&payment.trim_end()).unwrap(),
+        );
+        account.add_customer(customer.clone());
 
         // TODO: multiple customers
         // println!();
 
-        // render_customer_templates();
+        render_customer_templates::render_customer_info(&customer);
         println!("Please input 'x' to confirm customer information.");
         let mut input = String::new();
         stdin()
             .read_line(&mut input)
             .expect("Did not enter a correct string");
         if input.trim_end().eq("x") {
-            account.check_consumer(name);
+            account.check_consumer(customer.name());
             break;
         }
     }
