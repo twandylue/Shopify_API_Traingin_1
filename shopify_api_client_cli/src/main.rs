@@ -2,7 +2,7 @@ mod graphqls;
 mod models;
 mod render_templates;
 
-use crate::render_templates::render_products_templates;
+use crate::render_templates::{render_cart_templates, render_products_templates};
 use clap::Parser;
 use shopify_api_client_cli::models::{
     account::{Account, State},
@@ -74,13 +74,13 @@ fn main() {
             .find(|x| x.id() == input.trim_end().parse::<u32>().unwrap());
 
         cart.add(ele.unwrap());
-        render_cart_info(&cart);
+        render_cart_templates::render_cart_info(&cart);
     }
 
     let mut final_cart = cart.clone();
     while account.state() == State::CheckingSelectedProducts {
         println!("Checking your personal cart...");
-        render_cart_info(&final_cart);
+        render_cart_templates::render_cart_info(&final_cart);
         println!("Please input item number to 'remove' the product from your personal cart.");
         println!("Or input 'x' to confirm your personal cart.");
         let mut input = String::new();
@@ -110,30 +110,4 @@ fn main() {
     // }
 
     println!("end...");
-}
-
-pub fn render_cart_info(cart: &Cart) {
-    let product_list = Product_List::new();
-    println!("******************************");
-    println!("Current Cart: ");
-
-    cart.show_all().iter().for_each(|c| {
-        if let Some(product) = product_list.items().into_iter().find(|p| p.id() == *c.0) {
-            println!(
-                "{}). name: {}, price: {}, description: {}, number: {}",
-                product.id(),
-                product.name(),
-                product.price(),
-                product.description(),
-                *c.1
-            );
-        } else {
-            unreachable!(
-                "product id(in your cart): {} is not on the product list.",
-                *c.0
-            );
-        }
-    });
-    println!("******************************");
-    println!();
 }
