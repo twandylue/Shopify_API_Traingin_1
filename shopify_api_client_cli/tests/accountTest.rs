@@ -43,11 +43,10 @@ fn test_account_change_state_to_SelectingProducts_ok() {
 
     // act
     account.login();
-    let cart = account.select_products();
+    account.select_products();
 
     // assert
     assert_eq!(expected, account.state());
-    assert_eq!(cart.show_all().len(), 0);
 }
 
 #[test]
@@ -60,12 +59,11 @@ fn test_account_change_state_to_CheckingSelectedProducts_ok() {
 
     // act
     account.login();
-    let cart = account.select_products();
+    account.select_products();
     account.check_selected_products();
 
     // assert
     assert_eq!(expected, account.state());
-    assert_eq!(cart.show_all().len(), 0);
 }
 
 #[test]
@@ -81,13 +79,12 @@ fn test_account_change_state_to_CreatingConsumer_ok() {
 
     // act
     account.login();
-    let cart = account.select_products();
+    account.select_products();
     account.check_selected_products();
     account.create_consumer(name.clone(), address.clone(), payment);
 
     // assert
     assert_eq!(expected, account.state());
-    assert_eq!(cart.show_all().len(), 0);
     assert_eq!(1, account.customers().len());
     assert_eq!(
         Customer::new(name, address, payment),
@@ -108,14 +105,13 @@ fn test_account_change_state_to_ReadyToPay_ok() {
 
     // act
     account.login();
-    let cart = account.select_products();
+    account.select_products();
     account.check_selected_products();
     account.create_consumer(name.clone(), address, payment);
     account.check_consumer(name.clone());
 
     // assert
     assert_eq!(expected, account.state());
-    assert_eq!(cart.show_all().len(), 0);
     assert_eq!(1, account.customers().len());
 }
 
@@ -132,7 +128,7 @@ fn test_account_change_state_to_Paying_ok() {
 
     // act
     account.login();
-    let cart = account.select_products();
+    account.select_products();
     account.check_selected_products();
     account.create_consumer(name.clone(), address, payment);
     account.check_consumer(name.clone());
@@ -140,7 +136,6 @@ fn test_account_change_state_to_Paying_ok() {
 
     // assert
     assert_eq!(expected, account.state());
-    assert_eq!(cart.show_all().len(), 0);
     assert_eq!(1, account.customers().len());
 }
 
@@ -157,7 +152,7 @@ fn test_account_change_state_to_Paid_ok() {
 
     // act
     account.login();
-    let cart = account.select_products();
+    account.select_products();
     account.check_selected_products();
     account.create_consumer(name.clone(), address, payment);
     account.check_consumer(name.clone());
@@ -166,7 +161,6 @@ fn test_account_change_state_to_Paid_ok() {
 
     // assert
     assert_eq!(expected, account.state());
-    assert_eq!(cart.show_all().len(), 0);
     assert_eq!(1, account.customers().len());
 }
 

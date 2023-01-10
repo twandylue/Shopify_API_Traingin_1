@@ -221,11 +221,8 @@ impl Account {
         self.change_state(Command::Login);
     }
 
-    pub fn select_products(&mut self) -> Cart {
-        // TODO: one more state(Create Cart)?
+    pub fn select_products(&mut self) {
         self.change_state(Command::StartToSelectProducts);
-
-        return Cart::new();
     }
 
     pub fn check_selected_products(&mut self) {

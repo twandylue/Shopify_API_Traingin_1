@@ -56,7 +56,8 @@ fn main() {
     }
 
     let list = Product_List::new();
-    let mut cart: Cart = account.select_products();
+    let mut cart: Cart = Cart::new();
+    account.select_products();
     while account.state() == State::SelectingProducts {
         render_products_templates::render_products_info(&list);
         println!("input 'x' to check your cart");
