@@ -1,14 +1,14 @@
-// TODO:
-
-use std::io::stdin;
-
 use shopify_api_client_cli::models::{
     account::{Account, State},
     cart::Cart,
+    customer::Payment,
     product_list::Product_List,
 };
+use std::{io::stdin, str::FromStr};
 
-use crate::render_templates::{render_cart_templates, render_products_templates};
+use crate::render_templates::{
+    render_cart_templates, render_customer_templates, render_products_templates,
+};
 
 pub fn first_step_login() -> Account {
     println!("Hi! Please Login First");
@@ -102,4 +102,45 @@ pub fn forth_step_checking_selected_products(cart: Cart, account: &mut Account) 
     }
 
     return final_cart;
+}
+
+pub fn fifth_step_creating_consumers(account: &mut Account) {
+    println!("Creating Consumer...");
+
+    while account.state() == State::CreatingConsumer {
+        println!("Input the following information for new consumer: ");
+        println!("- Name: ");
+        let mut name = String::new();
+        stdin()
+            .read_line(&mut name)
+            .expect("Did not enter a correct string");
+
+        println!("- Address: ");
+        let mut address = String::new();
+        stdin()
+            .read_line(&mut address)
+            .expect("Did not enter a correct string");
+
+        println!("- Payment: ");
+        let mut payment = String::new();
+        stdin()
+            .read_line(&mut payment)
+            .expect("Did not enter a correct string");
+
+        account.create_consumer(name.clone(), address, Payment::from_str(&payment).unwrap());
+
+        // TODO: multiple customers
+        // println!();
+
+        // render_customer_templates();
+        println!("Please input 'x' to confirm customer information.");
+        let mut input = String::new();
+        stdin()
+            .read_line(&mut input)
+            .expect("Did not enter a correct string");
+        if input.trim_end().eq("x") {
+            account.check_consumer(name);
+            break;
+        }
+    }
 }
