@@ -129,4 +129,8 @@ impl Cart {
     pub fn state(&self) -> State {
         self.state
     }
+
+    pub fn checkout_url(&self) -> String {
+        self.checkout_url.clone()
+    }
 }
