@@ -58,6 +58,7 @@ fn main() {
     let mut cart: Cart = account.select_products();
     while account.state() == State::SelectingProducts {
         render_products_templates::render_products_info(&list);
+        println!("input 'x' to check your cart");
         let mut input = String::new();
         stdin()
             .read_line(&mut input)
@@ -73,14 +74,66 @@ fn main() {
             .find(|x| x.id() == input.trim_end().parse::<u32>().unwrap());
 
         cart.add(ele.unwrap());
+        render_cart_info(&cart);
     }
+
+    let mut final_cart = cart.clone();
+    while account.state() == State::CheckingSelectedProducts {
+        println!("Checking your personal cart...");
+        render_cart_info(&final_cart);
+        println!("Please input item number to 'remove' the product from your personal cart.");
+        println!("Or input 'x' to confirm your personal cart.");
+        let mut input = String::new();
+        stdin()
+            .read_line(&mut input)
+            .expect("Did not enter a correct string");
+        if input.trim_end().eq("x") {
+            break;
+        }
+
+        let item = input.trim_end().parse::<u32>().unwrap();
+
+        let product_list = Product_List::new();
+        if let Some(product) = product_list.items().into_iter().find(|p| p.id() == item) {
+            final_cart.remove(product);
+        } else {
+            unreachable!(
+                "product id(in your cart): {} is not on the product list.",
+                item
+            );
+        }
+    }
+
+    // TODO:
+    // while account.state() == State::CreatingConsumer {
+    //     todo!();
+    // }
 
     println!("end...");
 }
 
-// pub fn render_cart_info(cart: &Cart) {
-//     println!("Current Cart: ");
-//     cart.show_all().iter().for_each(|c| {
-//         c.0;
-//     });
-// }
+pub fn render_cart_info(cart: &Cart) {
+    let product_list = Product_List::new();
+    println!("******************************");
+    println!("Current Cart: ");
+
+    cart.show_all().iter().for_each(|c| {
+        if let Some(product) = product_list.items().into_iter().find(|p| p.id() == *c.0) {
+            println!(
+                "{}). name: {}, price: {}, description: {}, number: {}",
+                product.id(),
+                product.name(),
+                product.price(),
+                product.description(),
+                *c.1
+            );
+        } else {
+            unreachable!(
+                "product id(in your cart): {} is not on the product list.",
+                *c.0
+            );
+        }
+    });
+    println!("******************************");
+    println!();
+}
