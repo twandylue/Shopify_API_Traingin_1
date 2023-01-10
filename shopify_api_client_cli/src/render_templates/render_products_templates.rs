@@ -13,5 +13,4 @@ pub fn render_products_info(product_list: &Product_List) {
     });
     println!("----------------------------------");
     println!("Please choose what's you want(id).");
-    println!("input 'x' to checkout");
 }
