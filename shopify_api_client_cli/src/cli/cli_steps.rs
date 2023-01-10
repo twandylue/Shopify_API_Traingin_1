@@ -110,16 +110,34 @@ pub fn fifth_step_creating_consumers(account: &mut Account) {
 
     while account.state() == State::CreatingConsumer {
         println!("Input the following information for new consumer: ");
-        println!("- Name: ");
-        let mut name = String::new();
+        println!("- First Name: ");
+        let mut first_name = String::new();
         stdin()
-            .read_line(&mut name)
+            .read_line(&mut first_name)
+            .expect("Did not enter a correct string");
+
+        println!("- Last Name: ");
+        let mut last_name = String::new();
+        stdin()
+            .read_line(&mut last_name)
             .expect("Did not enter a correct string");
 
         println!("- Address: ");
         let mut address = String::new();
         stdin()
             .read_line(&mut address)
+            .expect("Did not enter a correct string");
+
+        println!("- eamil: ");
+        let mut email = String::new();
+        stdin()
+            .read_line(&mut email)
+            .expect("Did not enter a correct string");
+
+        println!("- phone: ");
+        let mut phone = String::new();
+        stdin()
+            .read_line(&mut phone)
             .expect("Did not enter a correct string");
 
         println!("- Payment(CreditCard/PickUpAtShop): ");
@@ -129,7 +147,10 @@ pub fn fifth_step_creating_consumers(account: &mut Account) {
             .expect("Did not enter a correct string");
 
         let customer = Customer::new(
-            name.trim_end().to_string(),
+            first_name.trim_end().to_string(),
+            last_name.trim_end().to_string(),
+            email.trim_end().to_string(),
+            phone.trim_end().to_string(),
             address.trim_end().to_string(),
             Payment::from_str(&payment.trim_end()).unwrap(),
         );
@@ -145,7 +166,7 @@ pub fn fifth_step_creating_consumers(account: &mut Account) {
             .read_line(&mut input)
             .expect("Did not enter a correct string");
         if input.trim_end().eq("x") {
-            account.check_consumer(customer.name());
+            account.check_consumer(customer.id());
             break;
         }
     }
