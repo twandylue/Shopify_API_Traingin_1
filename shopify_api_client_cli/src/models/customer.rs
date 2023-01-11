@@ -144,11 +144,6 @@ impl Customer {
         return token;
     }
 
-    // pub fn checkout_cart(&mut self, cart: Cart) {
-    //     // TODO: API(checkout)
-    //     todo!();
-    // }
-
     // getters
     pub fn first_name(&self) -> String {
         self.first_name.clone()
