@@ -1,5 +1,20 @@
 # References
 
+## Generating schema.graphql
+
+[Cli tool](https://github.com/graphql-rust/graphql-client/tree/main/graphql_client_cli)
+
+TODO:
+
+```plain
+graphql-client introspect-schema
+--output ./schema.graphql
+--header 'X-Shopify-Storefront-Access-Token: ********************************'
+https://eat-your-own-dog-food.myshopify.com/api/2022-10/graphql.json
+
+graphql-client introspect-schema --output ./test.json --header 'X-Shopify-Storefront-Access-Token: ********************************' https://eat-your-own-dog-food.myshopify.com/api/2022-10/graphql.json
+```
+
 ## Required APIs
 
 - [建立帳號(customerCreate)](https://shopify.dev/api/storefront/2022-10/mutations/customerCreate)
