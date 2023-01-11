@@ -238,7 +238,6 @@ impl Account {
         self.customers.push(customer);
     }
 
-    // NOTE: return checkout url
     pub fn check_consumer(&mut self, customer_name: String) -> Customer {
         // TODO: select by name
         self.change_state(Command::CheckConsumerInfo);
