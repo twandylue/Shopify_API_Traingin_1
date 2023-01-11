@@ -160,14 +160,20 @@ pub fn fifth_step_creating_customers(account: &mut Account) {
         // println!();
 
         render_customer_templates::render_customer_info(&customer);
-        println!("Please input 'x' to confirm customer information.");
+        println!("Please input 'x' to confirm customers information.");
         let mut input = String::new();
         stdin()
             .read_line(&mut input)
             .expect("Did not enter a correct string");
         if input.trim_end().eq("x") {
-            account.check_consumer(customer.id());
             break;
         }
     }
+}
+
+pub fn sixth_step_confirm_customer_info() -> Customer {
+    // TODO:
+    // account.check_consumer(customer.id());
+    // return customer;
+    todo!()
 }
