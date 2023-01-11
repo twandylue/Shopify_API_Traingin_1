@@ -51,6 +51,7 @@ pub fn third_step_selecting_products(account: &mut Account) -> Cart {
     account.select_products();
     while account.state() == State::SelectingProducts {
         render_products_templates::render_products_info(&list);
+        println!("Please choose what's you want(product Id).");
         println!("input 'x' to check your cart");
         let mut input = String::new();
         stdin()
@@ -61,12 +62,19 @@ pub fn third_step_selecting_products(account: &mut Account) -> Cart {
             break;
         }
 
-        let ele = list
-            .items()
-            .into_iter()
-            .find(|x| x.id() == input.trim_end().parse::<u32>().unwrap());
+        if let Ok(id) = input.trim_end().parse::<u32>() {
+            match list.items().into_iter().find(|x| x.id() == id) {
+                Some(product) => cart.add(product),
+                None => println!(
+                "Your input is not match the current product Id, please select the product again."
+            ),
+            }
+        } else {
+            println!(
+                "Your input is not match the current product Id, please select the product again."
+            );
+        }
 
-        cart.add(ele.unwrap());
         render_cart_templates::render_cart_info(&cart);
     }
 

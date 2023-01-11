@@ -14,5 +14,4 @@ pub fn render_products_info(product_list: &Product_List) {
         );
     });
     println!("{}", format!("{:-<45}", ""));
-    println!("Please choose what's you want(id).");
 }
