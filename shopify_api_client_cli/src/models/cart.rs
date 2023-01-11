@@ -117,7 +117,7 @@ impl Cart {
             .and_modify(|counter| *counter -= 1);
     }
 
-    pub fn checkout(&mut self, mut customer: Customer) -> String {
+    pub fn checkout(&mut self, customer: &mut Customer) -> String {
         let token = customer.get_access_token();
         // TODO: API(cartCreate with token)
         // self.id = "xxxxxxxx".to_string();
