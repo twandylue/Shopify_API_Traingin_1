@@ -48,5 +48,11 @@ fn main() {
     println!("Clicking below url to checkout.");
     println!("- Url: {}", checkout_url);
 
+    // TODO: account paying and paid
+    account.pay();
+    println!("Start to Pay");
+    account.finish();
+    println!("Success!");
+
     println!("end...");
 }
