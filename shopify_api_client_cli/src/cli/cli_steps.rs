@@ -160,7 +160,7 @@ pub fn fifth_step_creating_customers(account: &mut Account) {
         // println!();
 
         render_customer_templates::render_customer_info(&customer);
-        println!("Please input 'x' to confirm customers information.");
+        println!("Please input 'x' to stop creating new customers.");
         let mut input = String::new();
         stdin()
             .read_line(&mut input)
@@ -171,9 +171,31 @@ pub fn fifth_step_creating_customers(account: &mut Account) {
     }
 }
 
-pub fn sixth_step_confirm_customer_info() -> Customer {
-    // TODO:
-    // account.check_consumer(customer.id());
-    // return customer;
-    todo!()
+pub fn sixth_step_confirm_customer_info(account: &mut Account) -> Customer {
+    while account.state() == State::CreatingCustomer {
+        println!("Current Customer:");
+        account.customers().iter().for_each(|customer| {
+            render_customer_templates::render_customer_info(&customer);
+        });
+
+        println!("Please confirm your customer information...");
+        println!("If the customer information is correct, please input 'x'");
+        let mut input = String::new();
+        stdin()
+            .read_line(&mut input)
+            .expect("Did not enter a correct string");
+        if input.trim_end().eq("x") {
+            // TODO: let user select customers
+            let mut customer = account.customers().into_iter();
+            match customer.next() {
+                Some(c) => {
+                    account.check_consumer(c.id());
+                    return c;
+                }
+                None => unreachable!("Customer Id does not exist."),
+            }
+        }
+    }
+
+    unreachable!("You have to comfirm your Customer information.");
 }

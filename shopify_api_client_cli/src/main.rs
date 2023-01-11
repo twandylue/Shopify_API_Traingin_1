@@ -41,9 +41,9 @@ fn main() {
 
     fifth_step_creating_customers(&mut account);
 
-    let mut final_customer = sixth_step_confirm_customer_info();
+    let mut final_customer = sixth_step_confirm_customer_info(&mut account);
 
-    let checkout_url = final_cart.checkout(final_customer);
+    let checkout_url = final_cart.checkout(&mut final_customer);
 
     println!("Clicking below url to checkout.");
     println!("- Url: {}", checkout_url);
