@@ -9,6 +9,7 @@ pub struct Account {
     password: String,
     customers: Vec<Customer>,
     state: State,
+    access_token: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -197,6 +198,7 @@ impl Account {
             password,
             customers: Vec::<Customer>::new(),
             state: self::State::Init,
+            access_token: String::new(),
         }
     }
 
@@ -217,6 +219,8 @@ impl Account {
     }
 
     pub fn login(&mut self) {
+        // TODO: API(CreateCustomAccesstToken)
+        // self.access_token = "xxxxxxxx".to_string();
         self.change_state(Command::Login);
     }
 
@@ -266,5 +270,9 @@ impl Account {
 
     pub fn customers(&self) -> Vec<Customer> {
         self.customers.clone()
+    }
+
+    pub fn access_token(&self) -> String {
+        self.access_token.clone()
     }
 }

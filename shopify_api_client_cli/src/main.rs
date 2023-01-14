@@ -43,7 +43,7 @@ fn main() {
 
     let mut final_customer = sixth_step_confirm_customer_info(&mut account);
 
-    let checkout_url = final_cart.checkout(&mut final_customer);
+    let checkout_url = final_cart.get_cart_id(account.access_token());
 
     println!("Clicking below url to checkout.");
     println!("- Url: {}", checkout_url);

@@ -47,7 +47,7 @@ pub fn second_step_what_do_you_want_to_do() {
 
 pub fn third_step_selecting_products(account: &mut Account) -> Cart {
     let list = Product_List::new();
-    let mut cart: Cart = Cart::new();
+    let mut cart = Cart::new();
     account.select_products();
     while account.state() == State::SelectingProducts {
         render_products_templates::render_products_info(&list);
@@ -82,7 +82,7 @@ pub fn third_step_selecting_products(account: &mut Account) -> Cart {
 }
 
 pub fn forth_step_checking_cart(cart: Cart, account: &mut Account) -> Cart {
-    let mut final_cart = cart.clone();
+    let mut final_cart = cart;
     while account.state() == State::CheckingSelectedProducts {
         println!("Checking your personal cart...");
         render_cart_templates::render_cart_info(&final_cart);

@@ -42,7 +42,7 @@ fn state_to_index(state: State) -> usize {
 #[derive(Debug, Clone, Copy)]
 enum Command {
     Invalid,
-    AddOrRemoveProducts,
+    GetId,
     Checkout,
 }
 const COMMAND_COUNT: usize = 3;
@@ -51,7 +51,7 @@ impl std::fmt::Display for Command {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Command::Invalid => write!(f, "Invalid"),
-            Command::AddOrRemoveProducts => write!(f, "AddOrRemoveProducts"),
+            Command::GetId => write!(f, "GetId"),
             Command::Checkout => write!(f, "Checkout"),
         }
     }
@@ -60,7 +60,7 @@ impl std::fmt::Display for Command {
 fn command_to_index(command: Command) -> usize {
     match command {
         Command::Invalid => 0,
-        Command::AddOrRemoveProducts => 1,
+        Command::GetId => 1,
         Command::Checkout => 2,
     }
 }
@@ -103,28 +103,53 @@ impl Cart {
     }
 
     pub fn add(&mut self, product: Product) {
-        self.change_state(Command::AddOrRemoveProducts);
-        self.current_products
-            .entry(product.id())
-            .and_modify(|counter| *counter += 1)
-            .or_insert(1);
+        match self.state {
+            State::Alive => {
+                self.current_products
+                    .entry(product.id())
+                    .and_modify(|counter| *counter += 1)
+                    .or_insert(1);
+            }
+            _ => {
+                unreachable!(
+                    "Invalid Cart state as adding new product into Cart. State should be {}, Current state: {}",
+                    State::Alive,
+                    self.state,
+                );
+            }
+        }
     }
 
     pub fn remove(&mut self, product: Product) {
-        self.change_state(Command::AddOrRemoveProducts);
-        self.current_products
-            .entry(product.id())
-            .and_modify(|counter| *counter -= 1);
+        match self.state {
+            State::Alive => {
+                self.current_products
+                    .entry(product.id())
+                    .and_modify(|counter| *counter -= 1);
+            }
+            _ => {
+                unreachable!(
+                    "Invalid Cart state as adding new product into Cart. State should be {}, Current state: {}",
+                    State::Alive,
+                    self.state,
+                );
+            }
+        }
     }
 
-    pub fn checkout(&mut self, customer: &mut Customer) -> String {
-        let token = customer.get_access_token();
+    pub fn get_cart_id(&mut self, access_token: String) -> String {
+        self.change_state(Command::GetId);
+        // let token = customer.get_access_token();
         // TODO: API(cartCreate with token)
         // self.id = "xxxxxxxx".to_string();
         // self.checkout_url = "ooooooooo".to_string();
-        self.change_state(Command::Checkout);
+        // self.change_state(Command::Checkout);
 
-        return self.checkout_url.clone();
+        return self.id.clone();
+    }
+
+    pub fn checkout(&mut self) {
+        self.change_state(Command::Checkout);
     }
 
     // getter
@@ -138,5 +163,9 @@ impl Cart {
         } else {
             None
         }
+    }
+
+    pub fn id(&self) -> String {
+        self.id.clone()
     }
 }

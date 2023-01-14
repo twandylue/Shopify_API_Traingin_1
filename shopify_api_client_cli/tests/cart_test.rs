@@ -20,8 +20,10 @@ fn test_cart_change_state_to_Alive_ok() {
     let expected = State::Alive;
     let mut cart = Cart::new();
     let p = Product::new(1, "product".to_string(), 100, "Just a product".to_string());
+    let access_token = String::from("token");
 
     // act
+    cart.get_cart_id(access_token);
     cart.add(p);
 
     // assert
@@ -34,11 +36,12 @@ fn test_cart_change_state_to_Checkouted_ok() {
     let expected = State::Checkouted;
     let mut cart = Cart::new();
     let p = Product::new(1, "product".to_string(), 100, "Just a product".to_string());
-    let mut customer = prepare_for_customer();
+    let access_token = String::from("token");
 
     // act
+    cart.get_cart_id(access_token);
     cart.add(p);
-    cart.checkout(&mut customer);
+    cart.checkout();
 
     // assert
     assert_eq!(expected, cart.state());
