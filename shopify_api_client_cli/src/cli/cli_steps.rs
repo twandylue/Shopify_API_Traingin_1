@@ -91,6 +91,7 @@ pub fn forth_step_checking_cart(cart: Cart, account: &mut Account) -> Cart {
             .expect("Did not enter a correct string");
         if input.trim_end().eq("x") {
             account.check_cart();
+            final_cart.confirm();
             break;
         }
 

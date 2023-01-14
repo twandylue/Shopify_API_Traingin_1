@@ -106,7 +106,6 @@ impl Customer {
         address: String,
         payment: Payment,
     ) -> Self {
-        // TODO: API(customerCreate)
         Customer {
             id: String::new(),
             first_name,

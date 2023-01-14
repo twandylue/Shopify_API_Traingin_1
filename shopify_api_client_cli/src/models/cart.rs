@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use super::{customer::Customer, product::Product};
+use super::product::Product;
 
 #[derive(Debug, Clone)]
 pub struct Cart {
@@ -140,12 +140,17 @@ impl Cart {
     pub fn get_cart_id(&mut self, access_token: String) -> String {
         self.change_state(Command::GetId);
         // let token = customer.get_access_token();
-        // TODO: API(cartCreate with token)
+        // TODO: API(cartCreate with access token)
         // self.id = "xxxxxxxx".to_string();
         // self.checkout_url = "ooooooooo".to_string();
         // self.change_state(Command::Checkout);
 
         return self.id.clone();
+    }
+
+    pub fn confirm(&self) {
+        // TODO: API(CartLinesAdd)
+        todo!();
     }
 
     pub fn checkout(&mut self) {
