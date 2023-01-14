@@ -12,6 +12,7 @@ use crate::{
     cli::cli_steps::{forth_step_checking_cart, third_step_selecting_products},
 };
 use clap::Parser;
+use shopify_api_client_cli::models::cart::Cart;
 
 use std::io::{stdout, Write};
 
@@ -35,8 +36,9 @@ fn main() {
 
     second_step_what_do_you_want_to_do();
 
-    let mut cart = third_step_selecting_products(&mut account);
+    let mut cart = Cart::new();
     cart.get_cart_id(account.access_token());
+    third_step_selecting_products(&mut account, &mut cart);
 
     let mut final_cart = forth_step_checking_cart(cart, &mut account);
 
