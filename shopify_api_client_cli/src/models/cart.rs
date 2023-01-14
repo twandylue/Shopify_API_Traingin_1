@@ -157,11 +157,16 @@ impl Cart {
         self.state
     }
 
-    pub fn checkout_url(&self) -> Option<String> {
-        if self.state == State::Checkouted {
-            Some(self.checkout_url.clone())
-        } else {
-            None
+    pub fn checkout_url(&self) -> String {
+        match self.state {
+            State::Alive => self.checkout_url.clone(),
+            _ => {
+                unreachable!(
+                        "Invalid Cart state as getting cart checkout url. State should be {}, Current state: {}",
+                        State::Alive,
+                        self.state,
+                );
+            }
         }
     }
 

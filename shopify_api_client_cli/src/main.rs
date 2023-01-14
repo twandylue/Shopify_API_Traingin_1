@@ -35,15 +35,16 @@ fn main() {
 
     second_step_what_do_you_want_to_do();
 
-    let cart = third_step_selecting_products(&mut account);
+    let mut cart = third_step_selecting_products(&mut account);
+    cart.get_cart_id(account.access_token());
 
     let mut final_cart = forth_step_checking_cart(cart, &mut account);
 
     fifth_step_creating_customers(&mut account);
 
-    let mut final_customer = sixth_step_confirm_customer_info(&mut account);
+    let final_customer = sixth_step_confirm_customer_info(&mut account);
 
-    let checkout_url = final_cart.get_cart_id(account.access_token());
+    let checkout_url = final_cart.checkout_url();
 
     println!("Clicking below url to checkout.");
     println!("- Url: {}", checkout_url);
@@ -53,6 +54,7 @@ fn main() {
     println!("Start to Pay");
     account.finish();
     println!("Success!");
+    final_cart.checkout();
 
     println!("end...");
 }
