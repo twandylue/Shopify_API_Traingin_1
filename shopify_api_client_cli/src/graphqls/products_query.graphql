@@ -1,0 +1,11 @@
+query ProductsQuery($first: Int!) {
+  products(first: $first) {
+    edges {
+      node {
+        id
+        title
+        totalInventory
+      }
+    }
+  }
+}
