@@ -12,7 +12,7 @@ use crate::{
     cli::cli_steps::{forth_step_checking_cart, third_step_selecting_products},
 };
 use clap::Parser;
-use shopify_api_client_cli::models::cart::Cart;
+use shopify_api_client_cli::models::{cart::Cart, product_list::Product_List};
 
 use std::{
     error::Error,
@@ -41,13 +41,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
     second_step_what_do_you_want_to_do();
 
     let mut cart = Cart::new();
-    let response = cart.get_cart_id(account.access_token()).await;
-    println!("cart id: {}", response.0);
-    println!("cart checkout_url: {}", response.1);
+    cart.get_cart_id(account.access_token()).await;
 
-    third_step_selecting_products(&mut account, &mut cart);
+    let mut product_list = Product_List::new();
+    product_list.dowload_products().await;
 
-    let mut final_cart = forth_step_checking_cart(cart, &mut account);
+    third_step_selecting_products(&mut account, &mut cart, product_list.clone()).await;
+
+    let mut final_cart = forth_step_checking_cart(cart, &mut account, product_list.clone());
 
     fifth_step_creating_customers(&mut account);
 

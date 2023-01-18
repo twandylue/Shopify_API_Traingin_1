@@ -223,11 +223,12 @@ impl Account {
     }
 
     pub async fn login(&mut self) -> Result<(), Box<dyn Error>> {
+        self.change_state(Command::Login);
+        // NOTE: API(create customer access token)
         let client = GraphqlClient::new();
         let response = client
             .create_customer_access_token(self.email.clone(), self.password.clone())
             .await?;
-        self.change_state(Command::Login);
         self.access_token = response.0;
 
         Ok(())

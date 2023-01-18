@@ -7,7 +7,7 @@ use std::collections::HashMap;
 pub struct Cart {
     id: String,
     checkout_url: String,
-    current_products: HashMap<u32, u32>,
+    current_products: HashMap<String, u32>,
     state: State,
 }
 
@@ -78,7 +78,7 @@ impl Cart {
         Cart {
             id: String::new(),
             checkout_url: String::new(),
-            current_products: HashMap::<u32, u32>::new(),
+            current_products: HashMap::<String, u32>::new(),
             state: State::Init,
         }
     }
@@ -99,7 +99,7 @@ impl Cart {
         }
     }
 
-    pub fn show_all(&self) -> HashMap<u32, u32> {
+    pub fn show_all(&self) -> HashMap<String, u32> {
         self.current_products.clone()
     }
 
@@ -144,7 +144,11 @@ impl Cart {
         let client = GraphqlClient::new();
         let result = client.create_cart(access_token).await;
         match result {
-            Ok(response) => return (response.0, response.1),
+            Ok(response) => {
+                self.id = response.0.clone();
+                self.checkout_url = response.1.clone();
+                return (response.0, response.1);
+            }
             _ => panic!("Get cart Id is failed."),
         }
     }

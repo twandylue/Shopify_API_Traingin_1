@@ -46,7 +46,10 @@ impl GraphqlClient {
         GraphqlClient {}
     }
 
-    async fn query_products(&self, first: i64) -> Result<(), Box<dyn Error>> {
+    pub async fn query_products(
+        &self,
+        first: i64,
+    ) -> Result<Vec<(String, String)>, Box<dyn Error>> {
         let input: products_query::Variables = products_query::Variables { first };
         let request_body = ProductsQuery::build_query(input);
         let mut header = HeaderMap::new();
@@ -59,17 +62,19 @@ impl GraphqlClient {
 
         let res = client.post(URI).json(&request_body).send().await?;
         let response_body: Response<products_query::ResponseData> = res.json().await?;
+        let mut result: Vec<(String, String)> = Vec::new();
         match response_body.data {
             Some(r) => {
-                for i in r.products.edges {
-                    println!("{:#?}", i.node.id);
-                    println!("---------------");
+                for edge in r.products.edges {
+                    result.push((edge.node.id, edge.node.title));
                 }
             }
             _ => (),
         }
 
-        Ok(())
+        return Ok(result);
+
+        // return Err("query produects is failed")?;
     }
 
     async fn add_lines_to_cart(&self) {

@@ -2,9 +2,10 @@ use shopify_api_client_cli::models::{
     account::{Account, State},
     cart::Cart,
     customer::{Customer, Payment},
+    product::Product,
     product_list::Product_List,
 };
-use std::{io::stdin, str::FromStr};
+use std::{collections::HashMap, hash::Hash, io::stdin, str::FromStr};
 
 use crate::render_templates::{
     render_cart_templates, render_customer_templates, render_products_templates,
@@ -24,6 +25,7 @@ pub async fn first_step_login() -> Account {
         .expect("Did not enter a correct string");
 
     let mut account = Account::new(email, password);
+
     match account.login().await {
         Ok(()) => (),
         Err(_) => panic!("login is failed!"),
@@ -48,11 +50,21 @@ pub fn second_step_what_do_you_want_to_do() {
     }
 }
 
-pub fn third_step_selecting_products(account: &mut Account, cart: &mut Cart) {
-    let list = Product_List::new();
+pub async fn third_step_selecting_products(
+    account: &mut Account,
+    cart: &mut Cart,
+    product_list: Product_List,
+) {
+    let mut product_map: HashMap<u32, String> = HashMap::new();
+    let mut i = 1;
+    for item in product_list.items() {
+        product_map.insert(i, item.id());
+        i += 1;
+    }
+
     account.select_products();
     while account.state() == State::SelectingProducts {
-        render_products_templates::render_products_info(&list);
+        render_products_templates::render_products_info(&product_list);
         println!("Please choose what's you want(product Id).");
         println!("input 'x' to check your cart");
         let mut input = String::new();
@@ -64,8 +76,12 @@ pub fn third_step_selecting_products(account: &mut Account, cart: &mut Cart) {
             break;
         }
 
-        if let Ok(id) = input.trim_end().parse::<u32>() {
-            match list.items().into_iter().find(|x| x.id() == id) {
+        if let Ok(i) = input.trim_end().parse::<u32>() {
+            match product_list
+                .items()
+                .into_iter()
+                .find(|x| x.id() == *product_map.get(&i).unwrap())
+            {
                 Some(product) => cart.add(product),
                 None => println!(
                 "Your input is not match the current product Id, please select the product again."
@@ -77,15 +93,19 @@ pub fn third_step_selecting_products(account: &mut Account, cart: &mut Cart) {
             );
         }
 
-        render_cart_templates::render_cart_info(&cart);
+        render_cart_templates::render_cart_info(&cart, &product_list);
     }
 }
 
-pub fn forth_step_checking_cart(cart: Cart, account: &mut Account) -> Cart {
-    let mut final_cart = cart;
+pub fn forth_step_checking_cart(
+    cart: Cart,
+    account: &mut Account,
+    product_list: Product_List,
+) -> Cart {
+    let mut final_cart = cart.clone();
     while account.state() == State::CheckingSelectedProducts {
         println!("Checking your personal cart...");
-        render_cart_templates::render_cart_info(&final_cart);
+        render_cart_templates::render_cart_info(&final_cart, &product_list);
         println!("Please input item number to 'remove' the product from your personal cart.");
         println!("Or input 'x' to confirm your personal cart.");
         let mut input = String::new();
@@ -98,10 +118,20 @@ pub fn forth_step_checking_cart(cart: Cart, account: &mut Account) -> Cart {
             break;
         }
 
+        let mut product_map: HashMap<u32, String> = HashMap::new();
+        let mut i = 1;
+        for item in product_list.items() {
+            product_map.insert(i, item.id());
+            i += 1;
+        }
+
         let item = input.trim_end().parse::<u32>().unwrap();
 
-        let product_list = Product_List::new();
-        if let Some(product) = product_list.items().into_iter().find(|p| p.id() == item) {
+        if let Some(product) = product_list
+            .items()
+            .into_iter()
+            .find(|p| p.id() == *product_map.get(&item).unwrap())
+        {
             final_cart.remove(product);
         } else {
             unreachable!(

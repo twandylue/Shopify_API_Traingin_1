@@ -1,13 +1,13 @@
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Product {
-    id: u32,
+    id: String,
     name: String,
     price: u32,
     description: String,
 }
 
 impl Product {
-    pub fn new(id: u32, name: String, price: u32, description: String) -> Self {
+    pub fn new(id: String, name: String, price: u32, description: String) -> Self {
         Product {
             id,
             name,
@@ -16,8 +16,8 @@ impl Product {
         }
     }
 
-    pub fn id(&self) -> u32 {
-        self.id
+    pub fn id(&self) -> String {
+        self.id.clone()
     }
 
     pub fn name(&self) -> String {
