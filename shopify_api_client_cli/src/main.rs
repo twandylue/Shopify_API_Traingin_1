@@ -30,7 +30,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // let args = Cli::parse();
     let _ = stdout().flush();
 
-    let mut account = first_step_login();
+    let mut account = first_step_login().await;
 
     println!();
     println!("Login Success! Hi! {}", account.email());

@@ -1,3 +1,7 @@
+use std::error::Error;
+
+use crate::client::graphql_client::GraphqlClient;
+
 use super::{
     cart::Cart,
     customer::{Customer, Payment},
@@ -218,10 +222,16 @@ impl Account {
         }
     }
 
-    pub fn login(&mut self) {
-        // TODO: API(CreateCustomAccesstToken)
-        // self.access_token = "xxxxxxxx".to_string();
+    pub async fn login(&mut self) -> Result<(), Box<dyn Error>> {
+        let client = GraphqlClient::new();
+        let response = client
+            .create_customer_access_token(self.email.clone(), self.password.clone())
+            .await?;
         self.change_state(Command::Login);
+        self.access_token = response.0;
+        println!("token: {}", self.access_token);
+
+        Ok(())
     }
 
     pub fn select_products(&mut self) {

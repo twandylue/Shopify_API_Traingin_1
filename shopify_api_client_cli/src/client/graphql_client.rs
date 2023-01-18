@@ -4,10 +4,11 @@ use reqwest::{
     header::{self, HeaderMap},
     Client,
 };
-use std::error::{self, Error};
+use std::error::Error;
 
 type URI = String;
 type URL = String;
+type DateTime = String;
 
 const URI: &str = "https://eat-your-own-dog-food.myshopify.com/api/2022-10/graphql.json";
 const URL: &str = "https://eat-your-own-dog-food.myshopify.com/api/2022-10/graphql.json";
@@ -29,6 +30,14 @@ pub struct ProductsQuery;
     response_derives = "Debug, Clone"
 )]
 pub struct CartCreate;
+
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/graphqls/schema.graphql",
+    query_path = "src/graphqls/create_customer_access_token.graphql",
+    response_derives = "Debug, Clone"
+)]
+pub struct CustomerAccessTokenCreate;
 
 pub struct GraphqlClient {}
 
@@ -67,8 +76,54 @@ impl GraphqlClient {
         todo!()
     }
 
-    async fn create_customer_access_token(&self) {
-        todo!()
+    pub async fn create_customer_access_token(
+        &self,
+        email: String,
+        password: String,
+    ) -> Result<(String, String), Box<dyn Error>> {
+        let input =
+            customer_access_token_create::CustomerAccessTokenCreateInput { email, password };
+        let request_body =
+            CustomerAccessTokenCreate::build_query(customer_access_token_create::Variables {
+                input,
+            });
+        let mut header = HeaderMap::new();
+        header.insert(
+            "X-Shopify-Storefront-Access-Token",
+            header::HeaderValue::from_str(TOKEN).unwrap(),
+        );
+
+        let client = Client::builder().default_headers(header).build()?;
+
+        let res = client.post(URL).json(&request_body).send().await?;
+        let response_body: Response<customer_access_token_create::ResponseData> =
+            res.json().await?;
+
+        match response_body.data {
+            Some(r) => {
+                let token = r
+                    .clone()
+                    .customer_access_token_create
+                    .unwrap()
+                    .customer_access_token
+                    .unwrap()
+                    .access_token;
+                let expires_at = r
+                    .customer_access_token_create
+                    .unwrap()
+                    .customer_access_token
+                    .unwrap()
+                    .expires_at;
+
+                println!("token : {:#?}", &token);
+                println!("expires_at : {:#?}", &expires_at);
+
+                return Ok((token, expires_at));
+            }
+            _ => (),
+        }
+
+        return Err("create_customer_access_token is failed")?;
     }
 
     pub async fn create_cart(

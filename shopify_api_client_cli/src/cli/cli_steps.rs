@@ -10,7 +10,7 @@ use crate::render_templates::{
     render_cart_templates, render_customer_templates, render_products_templates,
 };
 
-pub fn first_step_login() -> Account {
+pub async fn first_step_login() -> Account {
     println!("Hi! Please Login First");
     println!("- Account: ");
     let mut email = String::new();
@@ -24,7 +24,7 @@ pub fn first_step_login() -> Account {
         .expect("Did not enter a correct string");
 
     let mut account = Account::new(email, password);
-    account.login();
+    account.login().await;
 
     return account;
 }
