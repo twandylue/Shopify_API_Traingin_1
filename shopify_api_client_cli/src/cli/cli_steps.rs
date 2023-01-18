@@ -96,7 +96,7 @@ pub async fn third_step_selecting_products(
     }
 }
 
-pub fn forth_step_checking_cart(
+pub async fn forth_step_checking_cart(
     cart: Cart,
     account: &mut Account,
     product_list: &Product_List,
@@ -113,7 +113,7 @@ pub fn forth_step_checking_cart(
             .expect("Did not enter a correct string");
         if input.trim_end().eq("x") {
             account.check_cart();
-            final_cart.confirm();
+            final_cart.confirm().await;
             break;
         }
 

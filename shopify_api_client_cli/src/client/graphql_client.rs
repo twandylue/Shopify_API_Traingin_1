@@ -1,3 +1,4 @@
+use crate::models::cart::Cart;
 use cart_create::{CartBuyerIdentityInput, CartInput};
 use graphql_client::{GraphQLQuery, Response};
 use reqwest::{
@@ -77,8 +78,48 @@ impl GraphqlClient {
         // return Err("query produects is failed")?;
     }
 
-    async fn add_lines_to_cart(&self) {
-        todo!()
+    pub async fn add_lines_to_cart(&self, cart: Cart) -> Result<Cart, Box<dyn Error>> {
+        let mut new_cart = cart.clone();
+        let mut lines: Vec<cart_lines_add::CartLineInput> = Vec::new();
+        cart.show_all().into_iter().for_each(|(id, num)| {
+            lines.push(cart_lines_add::CartLineInput {
+                attributes: None,
+                quantity: Some(num.into()),
+                // merchandise_id: "gid://shopify/ProductVariant/2844131843".to_string(),
+                merchandise_id: id,
+                selling_plan_id: None,
+            })
+        });
+
+        println!("cart id: {}", cart.id());
+
+        let input = cart_lines_add::Variables {
+            // cart_id: "gid://shopify/Cart/d8e1aad02647fe49d38f825ad7d4e58f".to_string(),
+            cart_id: cart.id(),
+            lines,
+        };
+
+        let request_body = CartLinesAdd::build_query(input);
+        let mut header = HeaderMap::new();
+        header.insert(
+            "X-Shopify-Storefront-Access-Token",
+            header::HeaderValue::from_str(TOKEN).unwrap(),
+        );
+
+        let client = Client::builder().default_headers(header).build()?;
+
+        let res = client.post(URL).json(&request_body).send().await?;
+        let response_body: Response<cart_lines_add::ResponseData> = res.json().await?;
+        println!("response_body: {:#?}", response_body);
+
+        match response_body.data {
+            Some(res) => {
+                new_cart.update_checkout_url(res.cart_lines_add.unwrap().cart.unwrap().checkout_url)
+            }
+            None => todo!(),
+        };
+
+        return Ok(new_cart);
     }
 
     pub async fn create_customer_access_token(

@@ -48,7 +48,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     third_step_selecting_products(&mut account, &mut cart, &product_list).await;
 
-    let mut final_cart = forth_step_checking_cart(cart, &mut account, &product_list);
+    let mut final_cart = forth_step_checking_cart(cart, &mut account, &product_list).await;
+
+    todo!();
 
     fifth_step_creating_customers(&mut account);
 

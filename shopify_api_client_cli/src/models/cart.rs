@@ -153,9 +153,13 @@ impl Cart {
         }
     }
 
-    pub fn confirm(&self) {
-        // TODO: API(CartLinesAdd)
-        todo!();
+    pub async fn confirm(&mut self) {
+        // NOTE: API(CartLinesAdd)
+        let client = GraphqlClient::new();
+        match client.add_lines_to_cart(self.clone()).await {
+            Ok(cart) => self.update_checkout_url(cart.checkout_url),
+            Err(_) => todo!(),
+        };
     }
 
     pub fn checkout(&mut self) {
@@ -182,5 +186,10 @@ impl Cart {
 
     pub fn id(&self) -> String {
         self.id.clone()
+    }
+
+    // setter
+    pub fn update_checkout_url(&mut self, checkout_url: String) {
+        self.checkout_url = checkout_url
     }
 }
