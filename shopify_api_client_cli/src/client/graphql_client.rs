@@ -20,7 +20,7 @@ const TOKEN: &str = "********************************";
 #[graphql(
     schema_path = "src/graphqls/schema.graphql",
     query_path = "src/graphqls/products_query.graphql",
-    response_derives = "Debug"
+    response_derives = "Debug, Clone"
 )]
 pub struct ProductsQuery;
 
@@ -39,6 +39,14 @@ pub struct CartCreate;
     response_derives = "Debug, Clone"
 )]
 pub struct CustomerAccessTokenCreate;
+
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/graphqls/schema.graphql",
+    query_path = "src/graphqls/cart_lines_add.graphql",
+    response_derives = "Debug, Clone"
+)]
+pub struct CartLinesAdd;
 
 pub struct GraphqlClient {}
 
@@ -67,7 +75,10 @@ impl GraphqlClient {
         match response_body.data {
             Some(r) => {
                 for edge in r.products.edges {
-                    result.push((edge.node.id, edge.node.title));
+                    result.push((
+                        edge.node.variants.edges.first().unwrap().node.id.clone(),
+                        edge.node.title,
+                    ));
                 }
             }
             _ => (),
@@ -85,16 +96,12 @@ impl GraphqlClient {
             lines.push(cart_lines_add::CartLineInput {
                 attributes: None,
                 quantity: Some(num.into()),
-                // merchandise_id: "gid://shopify/ProductVariant/2844131843".to_string(),
                 merchandise_id: id,
                 selling_plan_id: None,
             })
         });
 
-        println!("cart id: {}", cart.id());
-
         let input = cart_lines_add::Variables {
-            // cart_id: "gid://shopify/Cart/d8e1aad02647fe49d38f825ad7d4e58f".to_string(),
             cart_id: cart.id(),
             lines,
         };
@@ -110,7 +117,6 @@ impl GraphqlClient {
 
         let res = client.post(URL).json(&request_body).send().await?;
         let response_body: Response<cart_lines_add::ResponseData> = res.json().await?;
-        println!("response_body: {:#?}", response_body);
 
         match response_body.data {
             Some(res) => {
