@@ -46,9 +46,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let mut product_list = Product_List::new();
     product_list.dowload_products().await;
 
-    third_step_selecting_products(&mut account, &mut cart, product_list.clone()).await;
+    third_step_selecting_products(&mut account, &mut cart, &product_list).await;
 
-    let mut final_cart = forth_step_checking_cart(cart, &mut account, product_list.clone());
+    let mut final_cart = forth_step_checking_cart(cart, &mut account, &product_list);
 
     fifth_step_creating_customers(&mut account);
 

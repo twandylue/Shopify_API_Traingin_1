@@ -2,10 +2,9 @@ use shopify_api_client_cli::models::{
     account::{Account, State},
     cart::Cart,
     customer::{Customer, Payment},
-    product::Product,
     product_list::Product_List,
 };
-use std::{collections::HashMap, hash::Hash, io::stdin, str::FromStr};
+use std::{collections::HashMap, io::stdin, str::FromStr};
 
 use crate::render_templates::{
     render_cart_templates, render_customer_templates, render_products_templates,
@@ -53,7 +52,7 @@ pub fn second_step_what_do_you_want_to_do() {
 pub async fn third_step_selecting_products(
     account: &mut Account,
     cart: &mut Cart,
-    product_list: Product_List,
+    product_list: &Product_List,
 ) {
     let mut product_map: HashMap<u32, String> = HashMap::new();
     let mut i = 1;
@@ -100,12 +99,12 @@ pub async fn third_step_selecting_products(
 pub fn forth_step_checking_cart(
     cart: Cart,
     account: &mut Account,
-    product_list: Product_List,
+    product_list: &Product_List,
 ) -> Cart {
     let mut final_cart = cart.clone();
     while account.state() == State::CheckingSelectedProducts {
         println!("Checking your personal cart...");
-        render_cart_templates::render_cart_info(&final_cart, &product_list);
+        render_cart_templates::render_cart_info(&final_cart, product_list);
         println!("Please input item number to 'remove' the product from your personal cart.");
         println!("Or input 'x' to confirm your personal cart.");
         let mut input = String::new();
