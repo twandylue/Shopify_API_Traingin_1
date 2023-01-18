@@ -1,5 +1,5 @@
 mod cli;
-mod graphqls;
+mod client;
 mod models;
 mod render_templates;
 
