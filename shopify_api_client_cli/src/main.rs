@@ -14,7 +14,10 @@ use crate::{
 use clap::Parser;
 use shopify_api_client_cli::models::cart::Cart;
 
-use std::io::{stdout, Write};
+use std::{
+    error::Error,
+    io::{stdout, Write},
+};
 
 #[derive(Parser, Debug)]
 struct Cli {
@@ -22,7 +25,8 @@ struct Cli {
     password: String,
 }
 
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
     // let args = Cli::parse();
     let _ = stdout().flush();
 
@@ -37,7 +41,12 @@ fn main() {
     second_step_what_do_you_want_to_do();
 
     let mut cart = Cart::new();
-    cart.get_cart_id(account.access_token());
+    // TODO:
+    let cart_id = cart
+        .get_cart_id("c53b4857b05fb46fe88c396f4374d77d".to_string())
+        .await;
+    println!("cart id_test: {}", cart_id);
+
     third_step_selecting_products(&mut account, &mut cart);
 
     let mut final_cart = forth_step_checking_cart(cart, &mut account);
@@ -59,4 +68,6 @@ fn main() {
     final_cart.checkout();
 
     println!("end...");
+
+    return Ok(());
 }

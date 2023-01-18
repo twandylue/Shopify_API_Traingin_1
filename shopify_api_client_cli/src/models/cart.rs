@@ -1,6 +1,7 @@
-use std::collections::HashMap;
+use crate::client::graphql_client::GraphqlClient;
 
 use super::product::Product;
+use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
 pub struct Cart {
@@ -137,13 +138,15 @@ impl Cart {
         }
     }
 
-    pub fn get_cart_id(&mut self, access_token: String) -> String {
+    pub async fn get_cart_id(&mut self, access_token: String) -> String {
         self.change_state(Command::GetId);
-        // let token = customer.get_access_token();
-        // TODO: API(cartCreate with access token)
-        // self.id = "xxxxxxxx".to_string();
-        // self.checkout_url = "ooooooooo".to_string();
-        // self.change_state(Command::Checkout);
+        // NOTE: API(cartCreate with access token)
+        let client = GraphqlClient::new();
+        let result = client.create_cart(access_token).await;
+        match result {
+            Ok(s) => return s,
+            Err(_) => panic!(),
+        }
 
         return self.id.clone();
     }
