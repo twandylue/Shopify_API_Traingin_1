@@ -138,17 +138,15 @@ impl Cart {
         }
     }
 
-    pub async fn get_cart_id(&mut self, access_token: String) -> String {
+    pub async fn get_cart_id(&mut self, access_token: String) -> (String, String) {
         self.change_state(Command::GetId);
         // NOTE: API(cartCreate with access token)
         let client = GraphqlClient::new();
         let result = client.create_cart(access_token).await;
         match result {
-            Ok(s) => return s,
-            Err(_) => panic!(),
+            Ok(response) => return (response.0, response.1),
+            _ => panic!("Get cart Id is failed."),
         }
-
-        return self.id.clone();
     }
 
     pub fn confirm(&self) {

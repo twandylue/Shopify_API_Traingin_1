@@ -42,10 +42,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let mut cart = Cart::new();
     // TODO:
-    let cart_id = cart
+    let response = cart
         .get_cart_id("c53b4857b05fb46fe88c396f4374d77d".to_string())
         .await;
-    println!("cart id_test: {}", cart_id);
+    println!("cart id: {}", response.0);
+    println!("cart checkout_url: {}", response.1);
 
     third_step_selecting_products(&mut account, &mut cart);
 
