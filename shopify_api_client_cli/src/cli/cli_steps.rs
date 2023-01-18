@@ -24,7 +24,10 @@ pub async fn first_step_login() -> Account {
         .expect("Did not enter a correct string");
 
     let mut account = Account::new(email, password);
-    account.login().await;
+    match account.login().await {
+        Ok(()) => (),
+        Err(_) => panic!("login is failed!"),
+    }
 
     return account;
 }

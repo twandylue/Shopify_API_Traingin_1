@@ -229,7 +229,6 @@ impl Account {
             .await?;
         self.change_state(Command::Login);
         self.access_token = response.0;
-        println!("token: {}", self.access_token);
 
         Ok(())
     }

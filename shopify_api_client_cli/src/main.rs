@@ -41,10 +41,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     second_step_what_do_you_want_to_do();
 
     let mut cart = Cart::new();
-    // TODO:
-    let response = cart
-        .get_cart_id("c53b4857b05fb46fe88c396f4374d77d".to_string())
-        .await;
+    let response = cart.get_cart_id(account.access_token()).await;
     println!("cart id: {}", response.0);
     println!("cart checkout_url: {}", response.1);
 

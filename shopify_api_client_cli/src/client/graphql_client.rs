@@ -115,9 +115,6 @@ impl GraphqlClient {
                     .unwrap()
                     .expires_at;
 
-                println!("token : {:#?}", &token);
-                println!("expires_at : {:#?}", &expires_at);
-
                 return Ok((token, expires_at));
             }
             _ => (),
