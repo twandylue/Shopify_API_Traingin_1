@@ -18,7 +18,8 @@ pub fn render_cart_info(cart: &Cart, product_list: &Product_List) {
     cart.show_all().iter().for_each(|c| {
         if let Some(product) = product_list.items().into_iter().find(|p| p.id() == *c.0) {
             println!(
-                "{}). name: {}, price: {}, description: {}, number: {}",
+                "{}). id: {}, name: {}, price: {}, description: {}, number: {}",
+                product.serial_number(),
                 product.id(),
                 product.name(),
                 product.price(),

@@ -15,11 +15,14 @@ impl Product_List {
     pub async fn dowload_products(&mut self) {
         // NOTE: API(query products)
         let client = GraphqlClient::new();
+        let mut i = 1;
         match client.query_products(5).await {
             Ok(results) => {
                 results.into_iter().for_each(|(id, title)| {
-                    self.items
-                        .push(Product::new(id, title, 100, "description".to_string()));
+                    let mut product = Product::new(id, title, 100, "description".to_string());
+                    product.set_number(i);
+                    i += 1;
+                    self.items.push(product);
                 });
             }
             Err(_) => panic!("query products is failed"),

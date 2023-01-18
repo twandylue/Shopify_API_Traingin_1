@@ -1,5 +1,6 @@
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Product {
+    serial_number: u32,
     id: String,
     name: String,
     price: u32,
@@ -9,11 +10,20 @@ pub struct Product {
 impl Product {
     pub fn new(id: String, name: String, price: u32, description: String) -> Self {
         Product {
+            serial_number: 0,
             id,
             name,
             price,
             description,
         }
+    }
+
+    pub fn set_number(&mut self, num: u32) {
+        self.serial_number = num
+    }
+
+    pub fn serial_number(&self) -> u32 {
+        self.serial_number
     }
 
     pub fn id(&self) -> String {
