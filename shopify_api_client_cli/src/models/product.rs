@@ -18,7 +18,7 @@ impl Product {
         }
     }
 
-    pub fn set_number(&mut self, num: u32) {
+    pub fn set_serial_number(&mut self, num: u32) {
         self.serial_number = num
     }
 

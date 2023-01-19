@@ -52,7 +52,7 @@ pub fn second_step_what_do_you_want_to_do() {
 pub async fn third_step_selecting_products(
     account: &mut Account,
     cart: &mut Cart,
-    product_list: &Product_List,
+    product_list: &ProductList,
 ) {
     let mut product_map: HashMap<u32, String> = HashMap::new();
     let mut i = 1;
@@ -99,7 +99,7 @@ pub async fn third_step_selecting_products(
 pub async fn forth_step_checking_cart(
     cart: Cart,
     account: &mut Account,
-    product_list: &Product_List,
+    product_list: &ProductList,
 ) -> Cart {
     let mut final_cart = cart.clone();
     while account.state() == State::CheckingSelectedProducts {

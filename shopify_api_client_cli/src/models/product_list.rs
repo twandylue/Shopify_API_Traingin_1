@@ -1,6 +1,5 @@
-use crate::client::graphql_client::GraphqlClient;
-
 use super::product::Product;
+use crate::client::graphql_client::GraphqlClient;
 
 #[derive(Debug, Clone)]
 pub struct ProductList {
@@ -19,8 +18,9 @@ impl ProductList {
         match client.query_products(5).await {
             Ok(results) => {
                 results.into_iter().for_each(|(id, title)| {
-                    let mut product = Product::new(id, title, 100, "description".to_string());
-                    product.set_number(i);
+                    let mut product =
+                        Product::new(id, title, 100, "default description".to_string());
+                    product.set_serial_number(i);
                     i += 1;
                     self.items.push(product);
                 });
