@@ -12,10 +12,7 @@ use crate::{
     cli::cli_steps::{forth_step_checking_cart, third_step_selecting_products},
 };
 use clap::Parser;
-use shopify_api_client_cli::{
-    client::graphql_client::GraphqlClient,
-    models::{cart::Cart, product_list::Product_List},
-};
+use shopify_api_client_cli::models::{cart::Cart, product_list::Product_List};
 
 use std::{
     error::Error,
@@ -30,6 +27,9 @@ struct Cli {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    println!("2023/01/19");
+    println!("Demo by AndyLu");
+
     // let args = Cli::parse();
     let _ = stdout().flush();
 
