@@ -1,6 +1,6 @@
 use crate::client::graphql_client::GraphqlClient;
 
-use super::product::Product;
+use super::{customer::Customer, product::Product};
 use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
@@ -160,6 +160,14 @@ impl Cart {
             Ok(cart) => self.update_checkout_url(cart.checkout_url),
             Err(_) => todo!(),
         };
+    }
+
+    pub async fn update_buyer_info(&self, customer: Customer, token: String) {
+        // NOTE: API(cartBuyerIdentityUpdate)
+        let client = GraphqlClient::new();
+        client
+            .update_cart_buyer_info(customer, token, self.id.clone())
+            .await;
     }
 
     pub fn checkout(&mut self) {

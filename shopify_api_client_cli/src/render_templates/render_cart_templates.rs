@@ -11,7 +11,7 @@ pub fn render_cart_info(cart: &Cart, product_list: &Product_List) {
     | |    / _` | '__| __|
     | |___| (_| | |  | |_
      \_____\__,_|_|  \__|
-    Id: {}
+    > Id: {}
     "#,
         cart.id()
     );

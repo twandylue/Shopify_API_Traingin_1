@@ -178,11 +178,11 @@ pub fn fifth_step_creating_customers(account: &mut Account) {
             .read_line(&mut phone)
             .expect("Did not enter a correct string");
 
-        println!("- Payment(CreditCard/PickUpAtShop): ");
-        let mut payment = String::new();
-        stdin()
-            .read_line(&mut payment)
-            .expect("Did not enter a correct string");
+        // println!("- Payment(CreditCard/PickUpAtShop): ");
+        // let mut payment = String::new();
+        // stdin()
+        //     .read_line(&mut payment)
+        //     .expect("Did not enter a correct string");
 
         let customer = Customer::new(
             first_name.trim_end().to_string(),
@@ -190,7 +190,7 @@ pub fn fifth_step_creating_customers(account: &mut Account) {
             email.trim_end().to_string(),
             phone.trim_end().to_string(),
             address.trim_end().to_string(),
-            Payment::from_str(&payment.trim_end()).unwrap(),
+            Payment::CreditCard,
         );
         account.add_customer(customer.clone());
 
@@ -216,7 +216,7 @@ pub fn sixth_step_confirm_customer_info(account: &mut Account) -> Customer {
             render_customer_templates::render_customer_info(&customer);
         });
 
-        println!("Please confirm your customer information...");
+        println!("Please 'confirm' your customer information...");
         println!("If the customer information is correct, please input 'x'");
         let mut input = String::new();
         stdin()

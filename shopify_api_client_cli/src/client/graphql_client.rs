@@ -1,4 +1,5 @@
-use crate::models::cart::Cart;
+use self::cart_buyer_identity_update::MailingAddressInput;
+use crate::models::{cart::Cart, customer::Customer};
 use cart_create::{CartBuyerIdentityInput, CartInput};
 use graphql_client::{GraphQLQuery, Response};
 use reqwest::{
@@ -47,6 +48,14 @@ pub struct CustomerAccessTokenCreate;
     response_derives = "Debug, Clone"
 )]
 pub struct CartLinesAdd;
+
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/graphqls/schema.graphql",
+    query_path = "src/graphqls/cart_buyer_identity_update.graphql",
+    response_derives = "Debug, Clone"
+)]
+pub struct CartBuyerIdentityUpdate;
 
 pub struct GraphqlClient {}
 
@@ -179,7 +188,6 @@ impl GraphqlClient {
         &self,
         customer_access_token: String,
     ) -> Result<(String, String), Box<dyn Error>> {
-        // "c53b4857b05fb46fe88c396f4374d77d".to_string()
         let iden = CartBuyerIdentityInput {
             country_code: None,
             customer_access_token: Some(customer_access_token),
@@ -216,8 +224,6 @@ impl GraphqlClient {
             Some(r) => {
                 let id = r.clone().cart_create.unwrap().cart.unwrap().id;
                 let url = r.cart_create.unwrap().cart.unwrap().checkout_url;
-                // println!("cart id: {:#?}", &id);
-                // println!("cart checkout_url: {:#?}", &url);
 
                 return Ok((id, url));
             }
@@ -225,5 +231,55 @@ impl GraphqlClient {
         }
 
         return Err("create_cart failed")?;
+    }
+
+    pub async fn update_cart_buyer_info(
+        &self,
+        customer: Customer,
+        token: String,
+        cart_id: String,
+    ) -> Result<(), Box<dyn Error>> {
+        let delivery_info = cart_buyer_identity_update::DeliveryAddressInput {
+            delivery_address: Some(MailingAddressInput {
+                address1: Some(customer.address()),
+                address2: None,
+                city: Some("Taipei".to_string()),
+                company: Some("91APP".to_string()),
+                country: Some("Taiwan".to_string()),
+                first_name: Some(customer.first_name()),
+                last_name: Some(customer.last_name()),
+                phone: Some(customer.phone()),
+                province: None,
+                zip: None,
+            }),
+        };
+
+        let buyer_info = cart_buyer_identity_update::CartBuyerIdentityInput {
+            phone: Some(customer.phone()),
+            email: Some(customer.email()),
+            country_code: Some(cart_buyer_identity_update::CountryCode::TW),
+            customer_access_token: Some(token),
+            delivery_address_preferences: Some(vec![delivery_info]),
+        };
+
+        let input = cart_buyer_identity_update::Variables {
+            cart_id,
+            buyer_identity: buyer_info,
+        };
+
+        let request_body = CartBuyerIdentityUpdate::build_query(input);
+        let mut header = HeaderMap::new();
+        header.insert(
+            "X-Shopify-Storefront-Access-Token",
+            header::HeaderValue::from_str(TOKEN).unwrap(),
+        );
+
+        let client = Client::builder().default_headers(header).build()?;
+
+        let res = client.post(URL).json(&request_body).send().await?;
+        let response_body: Response<cart_buyer_identity_update::ResponseData> = res.json().await?;
+        // TODO:
+
+        Ok(())
     }
 }

@@ -136,7 +136,8 @@ impl Customer {
     }
 
     pub fn get_access_token(&mut self) -> String {
-        // TODO: API(customerAccessTokenCreate)
+        // Wrong
+        // TODO: remove this block
         let token = String::new();
         self.change_state(Command::GetAccessToken);
 
@@ -166,6 +167,10 @@ impl Customer {
 
     pub fn id(&self) -> String {
         self.id.clone()
+    }
+
+    pub fn phone(&self) -> String {
+        self.phone.clone()
     }
 
     pub fn state(&self) -> State {
