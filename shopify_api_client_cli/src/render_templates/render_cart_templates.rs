@@ -1,6 +1,6 @@
-use shopify_api_client_cli::models::{cart::Cart, product_list::Product_List};
+use shopify_api_client_cli::models::{cart::Cart, product_list::ProductList};
 
-pub fn render_cart_info(cart: &Cart, product_list: &Product_List) {
+pub fn render_cart_info(cart: &Cart, product_list: &ProductList) {
     println!();
     println!("{}", format!("{:*<45}", ""));
     println!(

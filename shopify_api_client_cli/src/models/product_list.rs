@@ -3,13 +3,13 @@ use crate::client::graphql_client::GraphqlClient;
 use super::product::Product;
 
 #[derive(Debug, Clone)]
-pub struct Product_List {
+pub struct ProductList {
     items: Vec<Product>,
 }
 
-impl Product_List {
+impl ProductList {
     pub fn new() -> Self {
-        Product_List { items: Vec::new() }
+        ProductList { items: Vec::new() }
     }
 
     pub async fn dowload_products(&mut self) {

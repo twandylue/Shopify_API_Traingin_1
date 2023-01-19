@@ -2,9 +2,9 @@ use shopify_api_client_cli::models::{
     account::{Account, State},
     cart::Cart,
     customer::{Customer, Payment},
-    product_list::Product_List,
+    product_list::ProductList,
 };
-use std::{collections::HashMap, io::stdin, str::FromStr};
+use std::{collections::HashMap, io::stdin};
 
 use crate::render_templates::{
     render_cart_templates, render_customer_templates, render_products_templates,

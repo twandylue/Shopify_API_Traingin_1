@@ -12,10 +12,7 @@ use crate::{
     cli::cli_steps::{forth_step_checking_cart, third_step_selecting_products},
 };
 use clap::Parser;
-use shopify_api_client_cli::{
-    client::graphql_client::GraphqlClient,
-    models::{cart::Cart, product_list::Product_List},
-};
+use shopify_api_client_cli::models::{cart::Cart, product_list::ProductList};
 
 use std::{
     error::Error,
@@ -46,7 +43,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let mut cart = Cart::new();
     cart.get_cart_id(account.access_token()).await;
 
-    let mut product_list = Product_List::new();
+    let mut product_list = ProductList::new();
     product_list.dowload_products().await;
 
     third_step_selecting_products(&mut account, &mut cart, &product_list).await;
