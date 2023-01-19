@@ -57,11 +57,20 @@ pub struct CartLinesAdd;
 )]
 pub struct CartBuyerIdentityUpdate;
 
-pub struct GraphqlClient {}
+pub struct GraphqlClient {
+    client: Client,
+}
 
 impl GraphqlClient {
     pub fn new() -> Self {
-        GraphqlClient {}
+        let mut header = HeaderMap::new();
+        header.insert(
+            "X-Shopify-Storefront-Access-Token",
+            header::HeaderValue::from_str(TOKEN).unwrap(),
+        );
+
+        let client = Client::builder().default_headers(header).build().unwrap();
+        GraphqlClient { client }
     }
 
     pub async fn query_products(
@@ -70,15 +79,8 @@ impl GraphqlClient {
     ) -> Result<Vec<(String, String)>, Box<dyn Error>> {
         let input: products_query::Variables = products_query::Variables { first };
         let request_body = ProductsQuery::build_query(input);
-        let mut header = HeaderMap::new();
-        header.insert(
-            "X-Shopify-Storefront-Access-Token",
-            header::HeaderValue::from_str(TOKEN).unwrap(),
-        );
 
-        let client = Client::builder().default_headers(header).build()?;
-
-        let res = client.post(URI).json(&request_body).send().await?;
+        let res = self.client.post(URI).json(&request_body).send().await?;
         let response_body: Response<products_query::ResponseData> = res.json().await?;
         let mut result: Vec<(String, String)> = Vec::new();
         match response_body.data {
@@ -116,15 +118,8 @@ impl GraphqlClient {
         };
 
         let request_body = CartLinesAdd::build_query(input);
-        let mut header = HeaderMap::new();
-        header.insert(
-            "X-Shopify-Storefront-Access-Token",
-            header::HeaderValue::from_str(TOKEN).unwrap(),
-        );
 
-        let client = Client::builder().default_headers(header).build()?;
-
-        let res = client.post(URL).json(&request_body).send().await?;
+        let res = self.client.post(URL).json(&request_body).send().await?;
         let response_body: Response<cart_lines_add::ResponseData> = res.json().await?;
 
         match response_body.data {
@@ -148,15 +143,8 @@ impl GraphqlClient {
             CustomerAccessTokenCreate::build_query(customer_access_token_create::Variables {
                 input,
             });
-        let mut header = HeaderMap::new();
-        header.insert(
-            "X-Shopify-Storefront-Access-Token",
-            header::HeaderValue::from_str(TOKEN).unwrap(),
-        );
 
-        let client = Client::builder().default_headers(header).build()?;
-
-        let res = client.post(URL).json(&request_body).send().await?;
+        let res = self.client.post(URL).json(&request_body).send().await?;
         let response_body: Response<customer_access_token_create::ResponseData> =
             res.json().await?;
 
@@ -209,15 +197,8 @@ impl GraphqlClient {
         };
 
         let request_body = CartCreate::build_query(input);
-        let mut header = HeaderMap::new();
-        header.insert(
-            "X-Shopify-Storefront-Access-Token",
-            header::HeaderValue::from_str(TOKEN).unwrap(),
-        );
 
-        let client = Client::builder().default_headers(header).build()?;
-
-        let res = client.post(URL).json(&request_body).send().await?;
+        let res = self.client.post(URL).json(&request_body).send().await?;
         let response_body: Response<cart_create::ResponseData> = res.json().await?;
 
         match response_body.data {
@@ -268,15 +249,8 @@ impl GraphqlClient {
         };
 
         let request_body = CartBuyerIdentityUpdate::build_query(input);
-        let mut header = HeaderMap::new();
-        header.insert(
-            "X-Shopify-Storefront-Access-Token",
-            header::HeaderValue::from_str(TOKEN).unwrap(),
-        );
 
-        let client = Client::builder().default_headers(header).build()?;
-
-        let res = client.post(URL).json(&request_body).send().await?;
+        let res = self.client.post(URL).json(&request_body).send().await?;
         let response_body: Response<cart_buyer_identity_update::ResponseData> = res.json().await?;
         // TODO:
 
