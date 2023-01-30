@@ -63,6 +63,13 @@ User->ChatBot: Choose products
 
 TODO:
 
+## TODOs
+
+- [ ] Configable
+- [ ] Unit tests (with mocking)
+- [ ] Documents
+- [ ] Panic handler and messages
+
 ## References
 
 - [GraphQL Client In Rust](https://github.com/graphql-rust/graphql-client)
