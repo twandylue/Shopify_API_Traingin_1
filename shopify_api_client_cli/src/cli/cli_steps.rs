@@ -1,16 +1,15 @@
+use crate::render_templates::{
+    render_cart_templates, render_customer_templates, render_products_templates,
+};
 use shopify_api_client_cli::models::{
     account::{Account, State},
     cart::Cart,
     customer::{Customer, Payment},
-    product_list::Product_List,
+    product_list::ProductList,
 };
-use std::{io::stdin, str::FromStr};
+use std::{collections::HashMap, io::stdin};
 
-use crate::render_templates::{
-    render_cart_templates, render_customer_templates, render_products_templates,
-};
-
-pub fn first_step_login() -> Account {
+pub async fn first_step_login() -> Account {
     println!("Hi! Please Login First");
     println!("- Account: ");
     let mut email = String::new();
@@ -23,8 +22,13 @@ pub fn first_step_login() -> Account {
         .read_line(&mut password)
         .expect("Did not enter a correct string");
 
-    let mut account = Account::new(email, password);
-    account.login();
+    // NOTE: temporary hard code
+    let mut account = Account::new("andy@gmail.com".to_string(), "1234567890".to_string());
+
+    match account.login().await {
+        Ok(()) => (),
+        Err(_) => panic!("login is failed!"),
+    }
 
     return account;
 }
@@ -45,12 +49,21 @@ pub fn second_step_what_do_you_want_to_do() {
     }
 }
 
-pub fn third_step_selecting_products(account: &mut Account) -> Cart {
-    let list = Product_List::new();
-    let mut cart: Cart = Cart::new();
+pub async fn third_step_selecting_products(
+    account: &mut Account,
+    cart: &mut Cart,
+    product_list: &ProductList,
+) {
+    let mut product_map: HashMap<u32, String> = HashMap::new();
+    let mut i = 1;
+    for item in product_list.items() {
+        product_map.insert(i, item.id());
+        i += 1;
+    }
+
     account.select_products();
     while account.state() == State::SelectingProducts {
-        render_products_templates::render_products_info(&list);
+        render_products_templates::render_products_info(&product_list);
         println!("Please choose what's you want(product Id).");
         println!("input 'x' to check your cart");
         let mut input = String::new();
@@ -62,8 +75,12 @@ pub fn third_step_selecting_products(account: &mut Account) -> Cart {
             break;
         }
 
-        if let Ok(id) = input.trim_end().parse::<u32>() {
-            match list.items().into_iter().find(|x| x.id() == id) {
+        if let Ok(i) = input.trim_end().parse::<u32>() {
+            match product_list
+                .items()
+                .into_iter()
+                .find(|x| x.id() == *product_map.get(&i).unwrap())
+            {
                 Some(product) => cart.add(product),
                 None => println!(
                 "Your input is not match the current product Id, please select the product again."
@@ -75,17 +92,19 @@ pub fn third_step_selecting_products(account: &mut Account) -> Cart {
             );
         }
 
-        render_cart_templates::render_cart_info(&cart);
+        render_cart_templates::render_cart_info(&cart, &product_list);
     }
-
-    return cart;
 }
 
-pub fn forth_step_checking_cart(cart: Cart, account: &mut Account) -> Cart {
+pub async fn forth_step_checking_cart(
+    cart: Cart,
+    account: &mut Account,
+    product_list: &ProductList,
+) -> Cart {
     let mut final_cart = cart.clone();
     while account.state() == State::CheckingSelectedProducts {
         println!("Checking your personal cart...");
-        render_cart_templates::render_cart_info(&final_cart);
+        render_cart_templates::render_cart_info(&final_cart, product_list);
         println!("Please input item number to 'remove' the product from your personal cart.");
         println!("Or input 'x' to confirm your personal cart.");
         let mut input = String::new();
@@ -94,13 +113,24 @@ pub fn forth_step_checking_cart(cart: Cart, account: &mut Account) -> Cart {
             .expect("Did not enter a correct string");
         if input.trim_end().eq("x") {
             account.check_cart();
+            final_cart.confirm().await;
             break;
+        }
+
+        let mut product_map: HashMap<u32, String> = HashMap::new();
+        let mut i = 1;
+        for item in product_list.items() {
+            product_map.insert(i, item.id());
+            i += 1;
         }
 
         let item = input.trim_end().parse::<u32>().unwrap();
 
-        let product_list = Product_List::new();
-        if let Some(product) = product_list.items().into_iter().find(|p| p.id() == item) {
+        if let Some(product) = product_list
+            .items()
+            .into_iter()
+            .find(|p| p.id() == *product_map.get(&item).unwrap())
+        {
             final_cart.remove(product);
         } else {
             unreachable!(
@@ -148,11 +178,11 @@ pub fn fifth_step_creating_customers(account: &mut Account) {
             .read_line(&mut phone)
             .expect("Did not enter a correct string");
 
-        println!("- Payment(CreditCard/PickUpAtShop): ");
-        let mut payment = String::new();
-        stdin()
-            .read_line(&mut payment)
-            .expect("Did not enter a correct string");
+        // println!("- Payment(CreditCard/PickUpAtShop): ");
+        // let mut payment = String::new();
+        // stdin()
+        //     .read_line(&mut payment)
+        //     .expect("Did not enter a correct string");
 
         let customer = Customer::new(
             first_name.trim_end().to_string(),
@@ -160,7 +190,7 @@ pub fn fifth_step_creating_customers(account: &mut Account) {
             email.trim_end().to_string(),
             phone.trim_end().to_string(),
             address.trim_end().to_string(),
-            Payment::from_str(&payment.trim_end()).unwrap(),
+            Payment::CreditCard,
         );
         account.add_customer(customer.clone());
 
@@ -186,7 +216,7 @@ pub fn sixth_step_confirm_customer_info(account: &mut Account) -> Customer {
             render_customer_templates::render_customer_info(&customer);
         });
 
-        println!("Please confirm your customer information...");
+        println!("Please 'confirm' your customer information...");
         println!("If the customer information is correct, please input 'x'");
         let mut input = String::new();
         stdin()

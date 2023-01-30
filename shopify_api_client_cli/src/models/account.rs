@@ -1,3 +1,7 @@
+use std::error::Error;
+
+use crate::client::graphql_client::GraphqlClient;
+
 use super::{
     cart::Cart,
     customer::{Customer, Payment},
@@ -9,6 +13,7 @@ pub struct Account {
     password: String,
     customers: Vec<Customer>,
     state: State,
+    access_token: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -197,6 +202,7 @@ impl Account {
             password,
             customers: Vec::<Customer>::new(),
             state: self::State::Init,
+            access_token: String::new(),
         }
     }
 
@@ -216,8 +222,16 @@ impl Account {
         }
     }
 
-    pub fn login(&mut self) {
+    pub async fn login(&mut self) -> Result<(), Box<dyn Error>> {
         self.change_state(Command::Login);
+        // NOTE: API(create customer access token)
+        let client = GraphqlClient::new();
+        let response = client
+            .create_customer_access_token(self.email.clone(), self.password.clone())
+            .await?;
+        self.access_token = response.0;
+
+        Ok(())
     }
 
     pub fn select_products(&mut self) {
@@ -266,5 +280,9 @@ impl Account {
 
     pub fn customers(&self) -> Vec<Customer> {
         self.customers.clone()
+    }
+
+    pub fn access_token(&self) -> String {
+        self.access_token.clone()
     }
 }

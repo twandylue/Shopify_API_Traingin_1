@@ -1,21 +1,32 @@
 use super::product::Product;
+use crate::client::graphql_client::GraphqlClient;
 
 #[derive(Debug, Clone)]
-pub struct Product_List {
+pub struct ProductList {
     items: Vec<Product>,
 }
 
-impl Product_List {
+impl ProductList {
     pub fn new() -> Self {
-        let list = Product_List {
-            items: Vec::from([
-                Product::new(1, "test 1".to_string(), 100, "test product 1".to_string()),
-                Product::new(2, "test 2".to_string(), 200, "test product 2".to_string()),
-                Product::new(3, "test 3".to_string(), 300, "test product 3".to_string()),
-            ]),
-        };
+        ProductList { items: Vec::new() }
+    }
 
-        return list;
+    pub async fn dowload_products(&mut self) {
+        // NOTE: API(query products)
+        let client = GraphqlClient::new();
+        let mut i = 1;
+        match client.query_products(5).await {
+            Ok(results) => {
+                results.into_iter().for_each(|(id, title)| {
+                    let mut product =
+                        Product::new(id, title, 100, "default description".to_string());
+                    product.set_serial_number(i);
+                    i += 1;
+                    self.items.push(product);
+                });
+            }
+            Err(_) => panic!("query products is failed"),
+        }
     }
 
     pub fn items(&self) -> Vec<Product> {

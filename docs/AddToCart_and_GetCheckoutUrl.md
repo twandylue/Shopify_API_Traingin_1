@@ -31,8 +31,8 @@
   mutation cartCreate {
     cartCreate {
       cart {
-          id
-          checkoutUrl
+        id
+        checkoutUrl
       }
       userErrors {
         field
@@ -52,7 +52,7 @@
       },
       "lines": [
         {
-          "merchandiseId": "gid://shopify/ProductVariant/160399327256",
+          "merchandiseId": "gid://shopify/ProductVariant/2844131843",
           "quantity": 1
         }
       ]
@@ -110,13 +110,13 @@ Before: [Getting product id](ListAllProducts.md)
   }
   ```
 
-- Variables
+- Input Variables
 
   ```json
   {
-    "cartId": "gid://shopify/Cart/51248df9eb2305a7394f020563966ec7",
+    "cartId": "gid://shopify/Cart/fa816cce12a47ca22e99b7ae0ff4f189",
     "lines": {
-      "merchandiseId": "gid://shopify/ProductVariant/160399327256",
+      "merchandiseId": "gid://shopify/ProductVariant/2844131843",
       "quantity": 1
     }
   }

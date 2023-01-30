@@ -4,10 +4,10 @@
 
 ## APIs
 
-- [建立帳號(customerCreate)](https://shopify.dev/api/storefront/2022-10/mutations/customerCreate)
+- [建立Customer(customerCreate)](https://shopify.dev/api/storefront/2022-10/mutations/customerCreate)
   - scope: `unauthenticated_write_customers`
 
-- [取得帳號 Access Token(customerAccessTokenCreate)](https://shopify.dev/api/storefront/2022-10/mutations/customerAccessTokenCreate)
+- [取得Customer Access Token(customerAccessTokenCreate)](https://shopify.dev/api/storefront/2022-10/mutations/customerAccessTokenCreate)
   - scope: `unauthenticated_write_customers`
 
 ## Sequence
@@ -35,7 +35,7 @@
   }
   ```
 
-- Variables
+- Input Variables
 
   ```json
   {
@@ -54,16 +54,18 @@
 
   ```json
   {
-    "data": {
-      "customer": {
-        "id": "Z2lkOi8vc2hvcGlmeS9DdXN0b21lci82NTcyOTg4MjAzMTg0",
-        "firstName": "Andy",
-        "lastName": "Lu",
-        "acceptsMarketing": true,
-        "email": "YoUrEmAil@???",
-        "phone": "+11111111111",
+      "data": {
+          "customerCreate": {
+              "customer": {
+                  "firstName": "Andy",
+                  "lastName": "Lu",
+                  "email": "test123@91app.gmail.com",
+                  "phone": "+15146669998",
+                  "acceptsMarketing": true
+              },
+              "customerUserErrors": []
+          }
       }
-    }
   }
   ```
 
@@ -72,14 +74,28 @@
 - Request
 
   ```graphql
-  mutation customerAccessTokenCreate {
-    customerAccessTokenCreate(input: {email: "YoUrEmAil@???", password: "---???***"}) {
-      customerAccessToken {
-        accessToken
-      }
+  mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
+    customerAccessTokenCreate(input: $input) {
       customerUserErrors {
+        code
+        field
         message
       }
+      customerAccessToken {
+        accessToken
+        expiresAt
+      }
+    }
+  }
+  ```
+
+- Input Variables
+
+  ```json
+  {
+    "input": {
+      "email": "test123@91app.gmail.com",
+      "password": "123454351234"
     }
   }
   ```
@@ -88,13 +104,14 @@
 
   ```json
   {
-    "data": {
-      "customerAccessTokenCreate": {
-        "customerAccessToken": {
-          "accessToken": "********************************"
-        },
-        "customerUserErrors": []
+      "data": {
+          "customerAccessTokenCreate": {
+              "customerUserErrors": [],
+              "customerAccessToken": {
+                  "accessToken": "********************************",
+                  "expiresAt": "2023-02-22T09:15:21Z"
+              }
+          }
       }
-    }
   }
   ```

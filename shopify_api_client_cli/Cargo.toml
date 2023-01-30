@@ -9,7 +9,7 @@ edition = "2021"
 # Cli
 clap = { version = "4.0.32", features = ["derive"] }
 # Graphql Client
-graphql_client = "0.11.0"
+graphql_client = { version ="0.11.0", features = ["reqwest-blocking"] }
 # This one enables us to use async operations
 tokio = { version = "1.24.1", features = ["full"] }
 # Error handling crate
