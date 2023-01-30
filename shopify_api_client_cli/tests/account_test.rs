@@ -14,6 +14,7 @@ fn prepare_for_customer() -> Customer {
 }
 
 #[test]
+#[allow(non_snake_case)]
 fn test_account_change_state_to_Logined_ok() {
     // arrange
     let expected = State::Logined;
@@ -30,6 +31,7 @@ fn test_account_change_state_to_Logined_ok() {
 
 #[test]
 #[should_panic(expected = "Invalid Account state changing. current state: Logined, command: Login")]
+#[allow(non_snake_case)]
 fn test_account_change_state_to_Logined_failed() {
     // arrange
     let email = "andylu@email.com".to_string();
@@ -44,6 +46,7 @@ fn test_account_change_state_to_Logined_failed() {
 }
 
 #[test]
+#[allow(non_snake_case)]
 fn test_account_change_state_to_SelectingProducts_ok() {
     // arrange
     let expected = State::SelectingProducts;
@@ -60,6 +63,7 @@ fn test_account_change_state_to_SelectingProducts_ok() {
 }
 
 #[test]
+#[allow(non_snake_case)]
 fn test_account_change_state_to_CheckingSelectedProducts_ok() {
     // arrange
     let expected = State::CheckingSelectedProducts;
@@ -77,6 +81,7 @@ fn test_account_change_state_to_CheckingSelectedProducts_ok() {
 }
 
 #[test]
+#[allow(non_snake_case)]
 fn test_account_change_state_to_CreatingConsumer_ok() {
     // arrange
     let expected = State::CreatingCustomer;
@@ -99,6 +104,7 @@ fn test_account_change_state_to_CreatingConsumer_ok() {
 }
 
 #[test]
+#[allow(non_snake_case)]
 fn test_account_change_state_to_ReadyToPay_ok() {
     // arrange
     let expected = State::ReadyToPay;
@@ -124,6 +130,7 @@ fn test_account_change_state_to_ReadyToPay_ok() {
 }
 
 #[test]
+#[allow(non_snake_case)]
 fn test_account_change_state_to_Paying_ok() {
     // arrange
     let expected = State::Paying;
@@ -150,6 +157,7 @@ fn test_account_change_state_to_Paying_ok() {
 }
 
 #[test]
+#[allow(non_snake_case)]
 fn test_account_change_state_to_Paid_ok() {
     // arrange
     let expected = State::Paid;
