@@ -2,7 +2,6 @@ mod cli;
 mod client;
 mod models;
 mod render_templates;
-
 use crate::{
     cli::cli_steps::first_step_login,
     cli::cli_steps::{
@@ -27,7 +26,6 @@ struct Cli {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    // let args = Cli::parse();
     let _ = stdout().flush();
 
     let mut account = first_step_login().await;

@@ -1,3 +1,6 @@
+use crate::render_templates::{
+    render_cart_templates, render_customer_templates, render_products_templates,
+};
 use shopify_api_client_cli::models::{
     account::{Account, State},
     cart::Cart,
@@ -5,10 +8,6 @@ use shopify_api_client_cli::models::{
     product_list::ProductList,
 };
 use std::{collections::HashMap, io::stdin};
-
-use crate::render_templates::{
-    render_cart_templates, render_customer_templates, render_products_templates,
-};
 
 pub async fn first_step_login() -> Account {
     println!("Hi! Please Login First");
@@ -23,7 +22,8 @@ pub async fn first_step_login() -> Account {
         .read_line(&mut password)
         .expect("Did not enter a correct string");
 
-    let mut account = Account::new(email, password);
+    // NOTE: temporary hard code
+    let mut account = Account::new("andy@gmail.com".to_string(), "1234567890".to_string());
 
     match account.login().await {
         Ok(()) => (),
