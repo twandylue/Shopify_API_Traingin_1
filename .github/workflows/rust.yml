@@ -10,17 +10,54 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  check:
+      name: Check
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: actions-rs/toolchain@v1
+          with:
+            profile: minimal
+            toolchain: stable
+            override: true
+        - run: |
+            cd ./shopify_api_client_cli
+            cargo check
+  test:
+    name: Test Suite
     runs-on: ubuntu-latest
-
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: |
+          cd ./shopify_api_client_cli
+          cargo test --verbose
+  fmt:
+    name: Rustfmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: |
+          cd ./shopify_api_client_cli
+          rustup component add rustfmt
+      - run: |
+          cd ./shopify_api_client_cli
+          cargo fmt --all -- --check
+  build:
+    name: build
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Build
       run: |
         cd ./shopify_api_client_cli
         cargo build --verbose
-    - name: Run tests
-      run: |
-        cd ./shopify_api_client_cli
-        cargo test --verbose
